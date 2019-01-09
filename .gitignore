@@ -3,3 +3,8 @@
 .Rhistory
 .RData
 .Rprofile
+*.sql
+*.sqlite
+*.dmp
+*.tsv
+*.accession2taxid.gz
