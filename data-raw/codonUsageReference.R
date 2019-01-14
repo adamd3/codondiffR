@@ -1,9 +1,14 @@
 #' @import taxonomizr
 #' @import dplyr
 
-## prepare SQL database of NCBI taxon names and nodes
+## Prepare SQL database of NCBI taxon names and nodes, using taxonomizr
+## functionality
 prepareDatabase(sqlFile = "../inst/extdata/nameNode.sql",)
 
+## There are two sets of data available from the Codon Usage Table Database:
+## those for NCBI RefSeq and NCBI Genbank entries, respectively.
+## See: hive.biochemistry.gwu.edu/review/codon
+## The latter dataset contains more sequences and is used here.
 
 RefSeqCU <- read.table(
     "../inst/extdata/o569942-refseq_species.tsv",
@@ -35,36 +40,40 @@ table(GenbankCU$Organelle)
 #         genomic mitochondrion       plastid
 # 1        404993        468875        130606
 
-RefSeqSubset <- subset(RefSeqCU, Organelle == "genomic")
-GenbankSubset <- subset(GenbankCU, Organelle == "genomic")
+## Keep only genomic entries
+RefSeqGenomic <- subset(RefSeqCU, Organelle == "genomic")
+GenbankGenomic <- subset(GenbankCU, Organelle == "genomic")
 
 nrow(RefSeqCU)
 ##[1] 130399
-nrow(RefSeqSubset)
+nrow(RefSeqGenomic)
 ##[1] 130044
 
 nrow(GenbankCU)
 ##[1] 1004475
-nrow(GenbankSubset)
+nrow(GenbankGenomic)
 ##[1] 404993
 
 
-## get taxonomic ranks of taxids
-taxa_domains_RefSeq <- getTaxonomy(
-    RefSeqSubset$Taxid, "../inst/extdata/nameNode.sql",
-    desiredTaxa = c("superkingdom")
-)
-taxa_domains_Genbank <- getTaxonomy(
-    GenbankSubset$Taxid, "../inst/extdata/nameNode.sql",
-    desiredTaxa = c("superkingdom")
-)
 
+##------------------------------------------------------------------------------
+## Annotate CUT database entries with taxonomic ranks
+##------------------------------------------------------------------------------
+taxa_domains_RefSeq <- getTaxonomy(
+    RefSeqGenomic$Taxid, "../inst/extdata/nameNode.sql",
+    desiredTaxa = c("superkingdom")
+)
 taxa_phyla_RefSeq <- getTaxonomy(
-    RefSeqSubset$Taxid, "../inst/extdata/nameNode.sql",
+    RefSeqGenomic$Taxid, "../inst/extdata/nameNode.sql",
     desiredTaxa = c("phylum")
 )
+
+taxa_domains_Genbank <- getTaxonomy(
+    GenbankGenomic$Taxid, "../inst/extdata/nameNode.sql",
+    desiredTaxa = c("superkingdom")
+)
 taxa_phyla_Genbank <- getTaxonomy(
-    GenbankSubset$Taxid, "../inst/extdata/nameNode.sql",
+    GenbankGenomic$Taxid, "../inst/extdata/nameNode.sql",
     desiredTaxa = c("phylum")
 )
 
@@ -259,71 +268,50 @@ table(taxa_phyla_Genbank)
 #             52                         184
 
 
-RefSeqSubset$Domain <- taxa_domains_RefSeq
-RefSeqSubset$Phylum <- taxa_phyla_RefSeq
+RefSeqGenomic$Domain <- taxa_domains_RefSeq
+RefSeqGenomic$Phylum <- taxa_phyla_RefSeq
 
-GenbankSubset$Domain <- taxa_domains_Genbank
-GenbankSubset$Phylum <- taxa_phyla_Genbank
+GenbankGenomic$Domain <- taxa_domains_Genbank
+GenbankGenomic$Phylum <- taxa_phyla_Genbank
 
+##------------------------------------------------------------------------------
+## get relative frequency of each codon
+##------------------------------------------------------------------------------
+codon_cols <- names(RefSeqGenomic)[13:76]
 
-## get proportion of each codon
-# [13] "TTT"               "TTC"               "TTA"
-# [16] "TTG"               "CTT"               "CTC"
-# [19] "CTA"               "CTG"               "ATT"
-# [22] "ATC"               "ATA"               "ATG"
-# [25] "GTT"               "GTC"               "GTA"
-# [28] "GTG"               "TAT"               "TAC"
-# [31] "TAA"               "TAG"               "CAT"
-# [34] "CAC"               "CAA"               "CAG"
-# [37] "AAT"               "AAC"               "AAA"
-# [40] "AAG"               "GAT"               "GAC"
-# [43] "GAA"               "GAG"               "TCT"
-# [46] "TCC"               "TCA"               "TCG"
-# [49] "CCT"               "CCC"               "CCA"
-# [52] "CCG"               "ACT"               "ACC"
-# [55] "ACA"               "ACG"               "GCT"
-# [58] "GCC"               "GCA"               "GCG"
-# [61] "TGT"               "TGC"               "TGA"
-# [64] "TGG"               "CGT"               "CGC"
-# [67] "CGA"               "CGG"               "AGT"
-# [70] "AGC"               "AGA"               "AGG"
-# [73] "GGT"               "GGC"               "GGA"
-# [76] "GGG"
+RefSeqGenomic[13:76] <- RefSeqGenomic[13:76] %>%
+    mutate(sum_freq_codpos = rowSums(.[codon_cols])) %>%
+    mutate_at(codon_cols, funs(./sum_freq_codpos)) %>%
+    select(-c(sum_freq_codpos)) %>%
+    select(sort(current_vars())) ## sort codons alphabetically
 
-names_to_transform <- names(RefSeqSubset)[13:76]
+codon_cols <- names(GenbankGenomic)[13:76]
+
+GenbankCodonSort <- GenbankGenomic[13:76] %>%
+    mutate(sum_freq_codpos = rowSums(.[codon_cols])) %>%
+    mutate_at(codon_cols, funs(./sum_freq_codpos)) %>%
+    select(-c(sum_freq_codpos)) %>%
+    select(sort(current_vars())) ## sort codons alphabetically
 
 
-## get percentage of each codon
-colProps <- RefSeqSubset[13:76] %>%
-  mutate(sum_freq_codpos = rowSums(.[names_to_transform])) %>%
-  mutate_at(names_to_transform, funs((./sum_freq_codpos)*100))
+## Select only required cols
+RefSeqSubset <- cbind(RefSeqGenomic[c(3,4,8,77,78)], RefSeqCodonSort)
+GenbankSubset <- cbind(GenbankGenomic[c(3,4,8,77,78)], GenbankCodonSort)
+
+## Remove all missing data
+RefSeqSubset <- na.omit(RefSeqSubset)
+GenbankSubset <- na.omit(GenbankSubset)
+
+table(GenbankSubset$Domain)
+# Archaea  Bacteria Eukaryota
+#    1323     69841    166673
+
+prop.table(table(GenbankSubset$Domain))
+#     Archaea    Bacteria   Eukaryota
+# 0.005562633 0.293650694 0.700786673
 
 
-RefSeqSubset %>%
-  group_by(TTT, TTC) %>%
-  summarise (n = n()) %>%
-  mutate(freq = n / sum(n))
-
-RefSeqSubset[13:76]
-
-prop.table(RefSeqSubset[13:76])
-
-apply(RefSeqSubset[13:76], 1, function(x) x/rowSums(RefSeqSubset[13:76]))
-
-apply(names(RefSeqSubset)[13:76], 1, function(x)) {
-  RefSeqSubset[paste0(x, "_pct")] <<- RefSeqSubset[x] / sum(RefSeqSubset[13:76])
-}
-
-for (row in 1:nrow(RefSeqSubset)) {
-  RefSeqSubset[paste0(col, "_pct")] = fruits[col] / sum(fruits[col])
-}
-
-usethis::use_data(RefSeqSubset, GenbankSubset, internal = TRUE)
-
-## TO DO: put data in R/sysdata.rda -- you can use usethis::use_data() to create
-##  this file with the argument internal = TRUE:
-## (see: http://r-pkgs.had.co.nz/data.html; section "Internal data")
-
-## see also https://coolbutuseless.github.io/2018/12/10/r-packages-internal-and-external-data/
-
-## NB: devtools::use_data() is DEPRECATED!
+##------------------------------------------------------------------------------
+## Save final data.frame for use in package
+##------------------------------------------------------------------------------
+usethis::use_data(GenbankSubset, internal = TRUE, overwrite = TRUE)
