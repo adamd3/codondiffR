@@ -13,3 +13,4 @@ Imports:
     Biostrings,
     methods,
     taxonomizr
+RoxygenNote: 6.1.1

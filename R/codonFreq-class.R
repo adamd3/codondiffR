@@ -25,13 +25,13 @@ setClass(
 
 setValidity(
     "codonFreq",
-    function(x) {
+    function(object) {
         errors <- character()
-        if (!is.numeric(x@freq)) {
+        if (!is.numeric(object@freq)) {
             error <- "Codon frequencies must be numeric values. \n"
             errors <- c(errors, error)
         }
-        if (!all(width(tmp)%%3 == 0)) {
+        if (!all(object@ntlen %%3 == 0)) {
             error <- paste0(
                 "All sequence lengths must be a multiple of three. ",
                 "Partial codons and non-coding regions are not allowed. \n"
@@ -51,34 +51,34 @@ setValidity(
 ##------------------------------------------------------------------------------
 #' @rdname codonFreq-class
 #' @export
-setGeneric("codonFreq", function(x) standardGeneric("codonFreq"))
+setGeneric("codonFreq", function(object) standardGeneric("codonFreq"))
 
 #' Create new objects of class \code{codonFreq}.
 #'
 #' @describeIn codonFreq
 #'
-#' @param x An object of class \code{DNAStringSet}.
+#' @param object An object of class \code{DNAStringSet}.
 #'
 #' @return A \code{codonFreq} object.
-setMethod("codonFreq", "DNAStringSet", function(x) {
-    emptyidx <- which(nchar(x) == 0)
+setMethod("codonFreq", "DNAStringSet", function(object) {
+    emptyidx <- which(nchar(object) == 0)
     if (length(emptyidx) > 0) {
       warning(
           paste0(
               "\nThe following sequences are empty and will be ignored: \n",
-              names(x)[emptyidx],
+              names(object)[emptyidx],
               "\n"
           )
       )
-      x <- x[-emptyidx]
+      object <- object[-emptyidx]
     }
-    freqmat <- .codonFreq(x)
+    freqmat <- .codonFreq(object)
     freqmat <- freqmat[,order(colnames(freqmat))]
     new(
         "codonFreq",
-        seqID = names(x),
+        seqID = names(object),
         freq = freqmat,
-        ntlen = width(x)
+        ntlen = width(object)
     )
 })
 
@@ -94,15 +94,15 @@ setMethod("codonFreq", "DNAStringSet", function(x) {
 #' @param object A \code{codonFreq} object.
 #'
 #' @export
-setMethod("show", "codonFreq", function(x) {
-    sc <- length(c1@seqID)
+setMethod("show", "codonFreq", function(object) {
+    sc <- length(object@seqID)
     cat(
         "An object of class codonFreq, with data for",
         sc,
         "sequences.\n"
     )
-    cdf <- as.data.frame(x@freq)
-    rownames(cdf) <- c1@seqID
+    cdf <- as.data.frame(object@freq)
+    rownames(cdf) <- object@seqID
     if (sc < 7) {
         print(cdf)
     } else {
@@ -119,7 +119,7 @@ setMethod("show", "codonFreq", function(x) {
 #' @rdname codonFreq-class
 #'
 #' @export
-setGeneric("getFreqs", function(x) standardGeneric("getFreqs"))
+setGeneric("getFreqs", function(object) standardGeneric("getFreqs"))
 
 #' Get relative frequencies from a \code{codonFreq} object.
 #'
@@ -128,19 +128,19 @@ setGeneric("getFreqs", function(x) standardGeneric("getFreqs"))
 #'
 #' @describeIn codonFreq
 #'
-#' @param x An object of class \code{codonFreq}.
+#' @param object An object of class \code{codonFreq}.
 #'
 #' @return Matrix, frequencies of codons in the \code{codonFreq} object.
 #'    Codons are in columns and input sequences are in rows.
 #'
 #' @export
-setMethod("getFreqs", "codonFreq", function(x) return(x@freq))
+setMethod("getFreqs", "codonFreq", function(object) return(object@freq))
 
 
 #' @rdname codonFreq-class
 #'
 #' @export
-setGeneric("nseq", function(x) standardGeneric("nseq"))
+setGeneric("nseq", function(object) standardGeneric("nseq"))
 
 #' Number of sequences in a \code{codonFreq} object.
 #'
@@ -153,13 +153,13 @@ setGeneric("nseq", function(x) standardGeneric("nseq"))
 #' @inheritParams getFreqs
 #'
 #' @return Numeric, the number of sequences in the \code{codonFreq} object.
-setMethod("nseq", "codonFreq", function(x) nrow(getFreqs(x)))
+setMethod("nseq", "codonFreq", function(object) nrow(getFreqs(object)))
 
 
 #' @rdname codonFreq-class
 #'
 #' @export
-setGeneric("seqID", function(x) standardGeneric("seqID"))
+setGeneric("seqID", function(object) standardGeneric("seqID"))
 
 #' Get the sequence identifiers in a \code{codonFreq} object.
 #'
@@ -173,12 +173,12 @@ setGeneric("seqID", function(x) standardGeneric("seqID"))
 #'
 #' @return Character, the identifiers of sequences in the \code{codonFreq}
 #'    object.
-setMethod("seqID", "codonFreq", function(x) return(x@seqID))
+setMethod("seqID", "codonFreq", function(object) return(object@seqID))
 
 #' @rdname codonFreq-class
 #'
 #' @export
-setGeneric("seqlen", function(x) standardGeneric("seqlen"))
+setGeneric("seqlen", function(object) standardGeneric("seqlen"))
 
 #' Get the lengths of sequences (nucleotides) in a \code{codonFreq} object.
 #'
@@ -191,4 +191,4 @@ setGeneric("seqlen", function(x) standardGeneric("seqlen"))
 #' @inheritParams getFreqs
 #'
 #' @return Numeric, lengths of sequences (in nucleotides).
-setMethod("seqlen", "codonFreq", function(x) return(x@ntlen))
+setMethod("seqlen", "codonFreq", function(object) return(object@ntlen))

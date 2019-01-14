@@ -5,9 +5,6 @@
 #' and visualisation of codon usage metrics and statistical analysis of
 #' differences in these metrics between taxa.
 #'
-#' @section Foo functions:
-#' The foo functions ...
-#'
 #' @docType package
 #' @name codondiffR
 #' @import methods
