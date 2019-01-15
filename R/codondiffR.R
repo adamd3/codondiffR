@@ -7,5 +7,4 @@
 #'
 #' @docType package
 #' @name codondiffR
-#' @import methods
 NULL

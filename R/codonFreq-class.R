@@ -4,6 +4,9 @@ NULL
 
 #' An S4 class to store relative codon frequencies for user-supplied sequences.
 #'
+#' @name codonFreq-class
+#' @rdname codonFreq-class
+#'
 #' @slot seqID Character vector of sequence identifiers, derived from Fasta
 #'    identifier lines.
 #' @slot codon_perc Matrix containing the relative frequencies of codons; each
@@ -116,7 +119,7 @@ setMethod("show", "codonFreq", function(object) {
 ##------------------------------------------------------------------------------
 ## Accessor methods
 ##------------------------------------------------------------------------------
-#' @rdname codonFreq-class
+#' @name getFreqs
 #'
 #' @export
 setGeneric("getFreqs", function(object) standardGeneric("getFreqs"))
@@ -126,7 +129,7 @@ setGeneric("getFreqs", function(object) standardGeneric("getFreqs"))
 #' Returns the relative frequencies of codons per sequence in a \code{codonFreq}
 #'    object.
 #'
-#' @describeIn codonFreq
+#' @describeIn getFreqs
 #'
 #' @param object An object of class \code{codonFreq}.
 #'
@@ -137,7 +140,7 @@ setGeneric("getFreqs", function(object) standardGeneric("getFreqs"))
 setMethod("getFreqs", "codonFreq", function(object) return(object@freq))
 
 
-#' @rdname codonFreq-class
+#' @name nseq
 #'
 #' @export
 setGeneric("nseq", function(object) standardGeneric("nseq"))
@@ -146,7 +149,7 @@ setGeneric("nseq", function(object) standardGeneric("nseq"))
 #'
 #' Returns the number of sequences in a \code{codonFreq} object.
 #'
-#' @describeIn codonFreq
+#' @describeIn nseq
 #'
 #' @export
 #'
@@ -156,7 +159,7 @@ setGeneric("nseq", function(object) standardGeneric("nseq"))
 setMethod("nseq", "codonFreq", function(object) nrow(getFreqs(object)))
 
 
-#' @rdname codonFreq-class
+#' @name seqID
 #'
 #' @export
 setGeneric("seqID", function(object) standardGeneric("seqID"))
@@ -165,7 +168,7 @@ setGeneric("seqID", function(object) standardGeneric("seqID"))
 #'
 #' Returns the sequence identifiers in a \code{codonFreq} object.
 #'
-#' @describeIn codonFreq
+#' @describeIn seqID
 #'
 #' @export
 #'
@@ -175,7 +178,7 @@ setGeneric("seqID", function(object) standardGeneric("seqID"))
 #'    object.
 setMethod("seqID", "codonFreq", function(object) return(object@seqID))
 
-#' @rdname codonFreq-class
+#' @name seqlen
 #'
 #' @export
 setGeneric("seqlen", function(object) standardGeneric("seqlen"))
@@ -184,7 +187,7 @@ setGeneric("seqlen", function(object) standardGeneric("seqlen"))
 #'
 #' Returns the lengths of sequences (nucleotides) in a \code{codonFreq} object.
 #'
-#' @describeIn codonFreq
+#' @describeIn seqlen
 #'
 #' @export
 #'

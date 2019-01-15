@@ -295,18 +295,18 @@ GenbankCodonSort <- GenbankGenomic[13:76] %>%
 
 
 ## Select only required cols
-RefSeqSubset <- cbind(RefSeqGenomic[c(3,4,8,77,78)], RefSeqCodonSort)
-GenbankSubset <- cbind(GenbankGenomic[c(3,4,8,77,78)], GenbankCodonSort)
+RefSeqCUTD <- cbind(RefSeqGenomic[c(3,4,8,77,78)], RefSeqCodonSort)
+GenbankCUTD <- cbind(GenbankGenomic[c(3,4,8,77,78)], GenbankCodonSort)
 
 ## Remove all missing data
-RefSeqSubset <- na.omit(RefSeqSubset)
-GenbankSubset <- na.omit(GenbankSubset)
+RefSeqCUTD <- na.omit(RefSeqCUTD)
+GenbankCUTD <- na.omit(GenbankCUTD)
 
-table(GenbankSubset$Domain)
+table(GenbankCUTD$Domain)
 # Archaea  Bacteria Eukaryota
 #    1323     69841    166673
 
-prop.table(table(GenbankSubset$Domain))
+prop.table(table(GenbankCUTD$Domain))
 #     Archaea    Bacteria   Eukaryota
 # 0.005562633 0.293650694 0.700786673
 
@@ -314,4 +314,4 @@ prop.table(table(GenbankSubset$Domain))
 ##------------------------------------------------------------------------------
 ## Save final data.frame for use in package
 ##------------------------------------------------------------------------------
-usethis::use_data(GenbankSubset, internal = TRUE, overwrite = TRUE)
+usethis::use_data(GenbankCUTD, internal = TRUE, overwrite = TRUE)

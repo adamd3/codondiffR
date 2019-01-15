@@ -10,7 +10,7 @@ readSeq(file = character(), ...)
 \item{file}{Character, path to a file containing one or more protein-coding
 DNA sequences in fasta format.}
 
-\item{...}{Other arguments passed to readDNAStringSet or readRNAStringSet.}
+\item{...}{Other arguments passed to readDNAStringSet.}
 }
 \value{
 Returns a \code{DNAStringSet} object.

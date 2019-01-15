@@ -14,3 +14,11 @@ Imports:
     methods,
     taxonomizr
 RoxygenNote: 6.1.1
+Collate: 
+    'AllClasses.R'
+    'AllGenerics.R'
+    'codonFreq-class.R'
+    'codonComparisons.R'
+    'codondiffR.R'
+    'methods-codonFreq.R'
+    'readSeq.R'

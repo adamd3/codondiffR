@@ -5,7 +5,7 @@
 #'
 #' @param file Character, path to a file containing one or more protein-coding
 #'     DNA sequences in fasta format.
-#' @param ... Other arguments passed to readDNAStringSet or readRNAStringSet.
+#' @param ... Other arguments passed to readDNAStringSet.
 #'
 #' @return Returns a \code{DNAStringSet} object.
 #'
