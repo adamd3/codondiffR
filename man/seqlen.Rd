@@ -11,7 +11,7 @@ seqlen(object)
 \S4method{seqlen}{codonFreq}(object)
 }
 \arguments{
-\item{object}{An object of class \code{DNAStringSet}.}
+\item{object}{An object of class \code{codonFreq}.}
 }
 \value{
 Numeric, lengths of sequences (in nucleotides).

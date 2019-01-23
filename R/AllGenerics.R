@@ -1,35 +1,57 @@
-#' Constructor for objects of \code{codonFreq} class
-#'
+##------------------------------------------------------------------------------
+## Constructor
+##------------------------------------------------------------------------------
 #' @rdname codonFreq-class
 #'
 #' @export
 setGeneric("codonFreq", function(object) standardGeneric("codonFreq"))
 
-#' Get relative frequencies from a \code{codonFreq} object.
-#'
+
+
+##------------------------------------------------------------------------------
+## Accessors
+##------------------------------------------------------------------------------
 #' @rdname codonFreq-class
 #'
 #' @export
 setGeneric("getFreqs", function(object) standardGeneric("getFreqs"))
 
-#' Number of sequences in a \code{codonFreq} object.
-#'
 #' @rdname codonFreq-class
 #'
 #' @export
 setGeneric("nseq", function(object) standardGeneric("nseq"))
 
-
-#' Get the sequence identifiers in a \code{codonFreq} object.
-#'
 #' @rdname codonFreq-class
 #'
 #' @export
 setGeneric("seqID", function(object) standardGeneric("seqID"))
 
-#' Get the lengths of sequences (nucleotides) in a \code{codonFreq} object.
-#'
+#' @rdname codonFreq-class
+#'#'
+#' @export
+setGeneric("seqlen", function(object) standardGeneric("seqlen"))
+
+
+
+##------------------------------------------------------------------------------
+## Normalisation
+##------------------------------------------------------------------------------
 #' @rdname codonFreq-class
 #'
 #' @export
-setGeneric("seqlen", function(object) standardGeneric("seqlen"))
+setGeneric("normalise", function(object) standardGeneric("normalise"))
+
+
+
+##------------------------------------------------------------------------------
+## Codon comparisons
+##------------------------------------------------------------------------------
+#' @rdname codonCompare
+#'
+#' @export
+setGeneric(
+    "MCUFD",
+    function(
+        cFobj, exclude = character(length = 0), minlen = 600, norm = TRUE
+    ) standardGeneric("MCUFD")
+)

@@ -11,7 +11,7 @@ seqID(object)
 \S4method{seqID}{codonFreq}(object)
 }
 \arguments{
-\item{object}{An object of class \code{DNAStringSet}.}
+\item{object}{An object of class \code{codonFreq}.}
 }
 \value{
 Character, the identifiers of sequences in the \code{codonFreq}

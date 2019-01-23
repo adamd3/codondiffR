@@ -11,7 +11,7 @@ nseq(object)
 \S4method{nseq}{codonFreq}(object)
 }
 \arguments{
-\item{object}{An object of class \code{DNAStringSet}.}
+\item{object}{An object of class \code{codonFreq}.}
 }
 \value{
 Numeric, the number of sequences in the \code{codonFreq} object.
