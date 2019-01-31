@@ -14,6 +14,12 @@
 #'
 #' @return a \code{codonFreq} object.
 setMethod("codonFreq", "DNAStringSet", function(object) {
+    if (!all(width(object) %% 3 == 0)) {
+        stop(paste0(
+            "All sequences lengths must be a multiple of 3.\n",
+            "Partial codons and non-coding regions are not allowed."
+        ))
+    }
     emptyidx <- which(width(object) == 0)
     if (length(emptyidx) > 0) {
       warning(
@@ -25,13 +31,15 @@ setMethod("codonFreq", "DNAStringSet", function(object) {
       )
       object <- object[-emptyidx]
     }
-    freqmat <- .codonFreq(object)
+    freqmat <- Biostrings::trinucleotideFrequency(
+        object, step = 3, as.prob = TRUE
+    )
     freqmat <- freqmat[,order(colnames(freqmat))]
     new(
         "codonFreq",
         seqID = names(object),
         freq = freqmat,
-        seqlen = width(object)
+        ncod = width(object)/3
     )
 })
 
@@ -101,7 +109,7 @@ setMethod("seqID", "codonFreq", function(object) return(object@seqID))
 #' @inheritParams getFreqs
 #'
 #' @return Numeric, lengths of sequences (in codons).
-setMethod("seqlen", "codonFreq", function(object) return(object@seqlen))
+setMethod("seqlen", "codonFreq", function(object) return(object@ncod))
 
 
 ##------------------------------------------------------------------------------
@@ -123,7 +131,7 @@ setMethod("[", "codonFreq", function(x, i, j) {
         "codonFreq",
         seqID = x@seqID[i],
         freq = rbind(x@freq[i, j]),
-        seqlen = x@seqlen[i]
+        ncod = x@ncod[i]
     )
 })
 
@@ -135,7 +143,7 @@ setMethod("[[", "codonFreq", function(x, i, j) {
         "codonFreq",
         seqID = x@seqID[i],
         freq = rbind(x@freq[i, j]),
-        seqlen = x@seqlen[i]
+        ncod = x@ncod[i]
     )
 })
 
@@ -186,6 +194,6 @@ setMethod("normalise", "codonFreq", function(object) {
         "codonFreq",
         seqID = object@seqID,
         freq = cfnorm,
-        seqlen = object@seqlen
+        ncod = object@ncod
     )
 })
