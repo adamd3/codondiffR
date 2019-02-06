@@ -341,9 +341,3 @@ setMethod("predict_LDA",
         predcF
     }
 )
-
-pLDA_tmp2 <- predict_LDA(
-    tmp2norm, LDA_tmp2, rank = "Phylum", plot = FALSE,
-    minlen = 600, fname = "lda_tmp2", height = 30, width = 45,
-    identifier = "Narnavirus"
-)
