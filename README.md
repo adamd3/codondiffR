@@ -12,5 +12,6 @@ analysis is performed using the implementation in the [MASS package](https://cra
 To install codondiffR, run the following commands in R:
 ```{r}
 # install.packages("devtools")
+# library("devtools")
 devtools::install_github("adamd3/codondiffR")
 ```
