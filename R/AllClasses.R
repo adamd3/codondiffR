@@ -1,8 +1,16 @@
 #' @import methods
-#' @import Biostrings
-NULL
 
-#' A class for storing relative codon frequencies in user-supplied sequences.
+check_codonFreq <- function(object) {
+    errors <- character()
+    if (!is.numeric(object@freq)) {
+        msg <- paste("Codon frequencies must be numeric values. \n")
+        errors <- c(errors, msg)
+    }
+    if (length(errors) == 0) TRUE else errors
+}
+
+
+#' S4 class for storing relative codon frequencies in user-supplied sequences.
 #'
 #' @slot seqID Character vector of sequence identifiers, derived from Fasta
 #'    identifier lines.
@@ -20,12 +28,6 @@ setClass(
         name = NA_character_,
         freq = matrix(nrow = 0, ncol = 0),
         ncod = NA_real_
-    )
+    ),
+    validity = check_codonFreq
 )
-
-setValidity(
-    "codonFreq",
-    function(object) {
-        if (is.numeric(object@freq)) TRUE else
-            stop("Codon frequencies must be numeric values. \n")
-})

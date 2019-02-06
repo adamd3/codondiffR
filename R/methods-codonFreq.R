@@ -1,6 +1,43 @@
-#' @import Biostrings
+#' @include AllClasses.R
+#' @include AllGenerics.R
+#' @import ggplot2
+#' @import reshape2
+#' @import MASS
+#' @import caret
+#' @import e1071
+#' @import RColorBrewer
 #' @import dplyr
 #' @import stringr
+#' @import scales
+#' @importFrom Biostrings trinucleotideFrequency
+#' @importFrom Biostrings readDNAStringSet
+#' @importFrom Biostrings width
+NULL
+
+##------------------------------------------------------------------------------
+## Read in sequences
+##------------------------------------------------------------------------------
+#' Read nucleotide sequences from a file.
+#'
+#' Reads a fasta-format file containing one or more protein-coding
+#'     DNA sequences.
+#'
+#' @param file Character, path to a file containing one or more protein-coding
+#'     DNA sequences in fasta format.
+#' @param ... Other arguments passed to readDNAStringSet.
+#'
+#' @return Returns a \code{DNAStringSet} object.
+#'
+#' @examples
+#'     mySeq <- readSeq(file = "example.fasta")
+#'
+#' @export
+readSeq <- function(file = character(), ...) {
+    SSobj <- readDNAStringSet(file, format="fasta")
+    SSobj
+}
+
+
 
 ##------------------------------------------------------------------------------
 ## codonFreq constructor

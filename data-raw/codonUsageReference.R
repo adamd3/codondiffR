@@ -214,7 +214,7 @@ prop.table(table(GenbankCUTD$Domain))
 # 0.005470383 0.292939620 0.701589997
 
 ## Count numbers/proportions for a given length threshold:
-table(subset(GenbankCUTD, X..Codons >= 600)$Domain)
+table(subset(GenbankCUTD, X..Codons >= 600)$Domain, useNA="always")
 # Archaea  Bacteria Eukaryota
 #    1050     27402     72372
 
@@ -222,6 +222,101 @@ prop.table(table(subset(GenbankCUTD, X..Codons >= 600)$Domain))
 #    Archaea   Bacteria  Eukaryota
 # 0.01041419 0.27178053 0.71780528
 
+
+table(subset(GenbankCUTD, X..Codons >= 600)$Phylum, useNA="always")
+
+#             Acanthocephala               Acidobacteria
+#                          2                          13
+#             Actinobacteria                    Annelida
+#                       4420                         220
+#                Apicomplexa                   Aquificae
+#                        345                         107
+#            Armatimonadetes                  Arthropoda
+#                          4                       21651
+#                 Ascomycota             Bacillariophyta
+#                       9729                         101
+#              Bacteroidetes               Basidiomycota
+#                        732                        2762
+#         Blastocladiomycota                 Brachiopoda
+#                         10                          13
+#                    Bryozoa                 Caldiserica
+#                          8                           1
+#            Calditrichaeota     candidate division NC10
+#                          1                           1
+#    candidate division WWE3    Candidatus Cloacimonetes
+#                          1                           1
+# Candidatus Gracilibacteria     Candidatus Korarchaeota
+#                          1                           1
+# Candidatus Melainabacteria    Candidatus Micrarchaeota
+#                          1                           1
+#   Candidatus Parvarchaeota Candidatus Saccharibacteria
+#                          1                           3
+#   Candidatus Tectomicrobia                Chaetognatha
+#                          1                           3
+#                 Chlamydiae                    Chlorobi
+#                        144                          31
+#                Chloroflexi                 Chlorophyta
+#                         52                         289
+#                   Chordata                  Chromerida
+#                      22715                           3
+#             Chrysiogenetes             Chytridiomycota
+#                          2                          51
+#                   Cnidaria                Colponemidia
+#                        266                           3
+#       Coprothermobacterota               Crenarchaeota
+#                          1                          99
+#               Cryptomycota                  Ctenophora
+#                          1                          28
+#              Cyanobacteria             Deferribacteres
+#                       1822                           4
+#        Deinococcus-Thermus                 Dictyoglomi
+#                         76                           3
+#              Echinodermata               Elusimicrobia
+#                        116                           5
+#                 Entoprocta                   Euglenida
+#                          4                          48
+#              Euryarchaeota               Fibrobacteres
+#                        928                           3
+#                 Firmicutes                Fusobacteria
+#                       3120                          57
+#           Gemmatimonadetes               Haplosporidia
+#                          3                           7
+#               Hemichordata             Ignavibacteriae
+#                         11                           3
+#         Kiritimatiellaeota               Lentisphaerae
+#                          2                           1
+#              Microsporidia                    Mollusca
+#                         69                         658
+#               Mucoromycota               Nanoarchaeota
+#                        233                           2
+#                   Nematoda                Nematomorpha
+#                        328                           3
+#                   Nemertea                 Nitrospinae
+#                         15                           1
+#                Nitrospirae               Olpidiomycota
+#                         21                           2
+#                Onychophora                    Placozoa
+#                         14                           9
+#             Planctomycetes             Platyhelminthes
+#                         69                         114
+#                   Porifera                  Priapulida
+#                        130                           1
+#             Proteobacteria                   Rhombozoa
+#                      15540                           3
+#                   Rotifera                Spirochaetes
+#                         38                         362
+#               Streptophyta               Synergistetes
+#                      10512                           8
+#                 Tardigrada                 Tenericutes
+#                         13                         602
+#             Thaumarchaeota       Thermodesulfobacteria
+#                         17                           9
+#                Thermotogae             Verrucomicrobia
+#                         45                          29
+#            Xenacoelomorpha               Zoopagomycota
+#                         19                          88
+#                       <NA>
+#                       1838
 
 
 ##------------------------------------------------------------------------------
@@ -273,14 +368,14 @@ gbnorm <- t(gbnorm[order(row.names(gbnorm)), ])
 
 ## e.g. to check sequences with no Asparagine (N) amino acid [AAC/AAT codon]
 head(subset(GenbankCUTD, AAC == 0 & AAT == 0))
-# Taxid                        Species X..Codons superkingdom kingdom
+#        Taxid                        Species X..Codons superkingdom kingdom
 # 357  1321993                Vibrio sp. 3127        26     Bacteria    <NA>
 # 609  1835519        Frankia sp. AcoItVII.11       190     Bacteria    <NA>
 # 655   362757              Vibrio sp. CCH-64        41     Bacteria    <NA>
 # 1031  362570        Klebsiella sp. SO-Y1-40        63     Bacteria    <NA>
 # 1443 1221370    Sediminicola sp. YIK-SED-23       118     Bacteria    <NA>
 # 1592  212171 Actinomycetales bacterium GP-7        69     Bacteria    <NA>
-#       phylum         AAA AAC        AAG AAT         ACA        ACC
+#              phylum         AAA AAC        AAG AAT         ACA        ACC
 # 357  Proteobacteria 0.038461538   0 0.00000000   0 0.000000000 0.00000000
 # 609  Actinobacteria 0.005263158   0 0.00000000   0 0.000000000 0.03157895
 # 655  Proteobacteria 0.000000000   0 0.00000000   0 0.000000000 0.00000000
@@ -291,27 +386,6 @@ head(subset(GenbankCUTD, AAC == 0 & AAT == 0))
 
 gbnorm[is.nan(gbnorm)] <- NA
 gbnorm <- cbind(GenbankCUTD[1:6], gbnorm)
-
-
-
-# ##------------------------------------------------------------------------------
-# ## Handle missing data (NAs)
-# ##------------------------------------------------------------------------------
-# ## Certain taxa, even with large "X..Codons" counts, only utilise a small number
-# ## of codons -- for example, Taxid 1497514 (Colletotrichum sp. IVS-2014c)
-# ## has numerous Genbank entries of highly similar short nucleotide sequences
-# ## under different accession numbers (KJ490360, KJ490361, KJ490362, etc )
-# gbnorm$NAcount <- rowSums(is.na(gbnorm[7:ncol(gbnorm)]))
-#
-# nrow(gbnorm)
-# # 242579
-#
-# nrow(subset(gbnorm, NAcount < 20))
-# # 239610
-#
-# gbnorm <- subset(gbnorm, NAcount < 20)
-#
-# gbnorm$NAcount <- NULL
 
 
 

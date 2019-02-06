@@ -12,13 +12,19 @@ Imports:
     ggplot2,
     Biostrings,
     methods,
-    taxonomizr
+    taxonomizr,
+    caret,
+    MASS,
+    e1071,
+    stringr,
+    RColorBrewer,
+    reshape2,
+    scales
 RoxygenNote: 6.1.1
 Collate: 
     'AllClasses.R'
     'AllGenerics.R'
     'methods-codonFreq.R'
-    'codonComparisons.R'
-    'codonFreq-class.R'
+    'LDA.R'
+    'MCUFD.R'
     'codondiffR.R'
-    'readSeq.R'
