@@ -347,5 +347,3 @@ pLDA_tmp2 <- predict_LDA(
     minlen = 600, fname = "lda_tmp2", height = 30, width = 45,
     identifier = "Narnavirus"
 )
-
-# groups Acanthocephala candidate division NC10 Olpidiomycota are empty
