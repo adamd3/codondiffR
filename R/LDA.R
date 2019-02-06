@@ -120,9 +120,6 @@ setMethod("LDA",
         train <- sample(1:nrow(gbnorm), ntrain)
         f <- as.formula(substitute(x ~ ., list(x = as.name(rank))))
         m1 <- lda(f, gbnorm, na.action = "na.omit", subset = train)
-        # predAll <- predict(m1, gbnorm[-train, ])
-        # tablin <- table(gbnorm[-train, 1], predAll$class)
-        # acc <- sum(diag(tablin))/sum(tablin)
         m1
 })
 
@@ -236,8 +233,8 @@ setMethod("bootstrap_LDA",
 #' LDA plots
 #'
 #' Predict taxonomic classifications for sequences in a \code{codonFreq})
-#' object, using linear discriminants from an \code{lda}) model. Optionally
-#'    plot disciminants and predictions.
+#' object, using linear discriminants from an \code{lda}) model. Plot
+#' disciminants and predictions.
 #'
 #' @param cFobj An object of class \code{codonFreq}.
 #' @param ldaObj Object of class \code{lda} - produced using the LDA() function.
@@ -264,7 +261,12 @@ setMethod("bootstrap_LDA",
 #' @return A \code{ggplot} object.
 #'
 #' @examples
-#'    TBA
+#'    predLDA <- predict_LDA(
+#'        tmp2norm, LDA_tmp2, rank = "Phylum",
+#'        minlen = 600, fname = "lda_tmp2", height = 5, width = 7,
+#'        identifier = "Narnavirus"
+#'    )
+#'    sort(table(predLDA$class))
 #'
 #' @rdname plots
 #'
@@ -303,31 +305,40 @@ setMethod("predict_LDA",
         allDat <- allDat[completeVec, ]
         ## get proportion of inter-group variance explained by LDs
         prop_lda <- ldaObj$svd^2/sum(ldaObj$svd^2)
-        print(cFdat)
         predcF <- predict(object = ldaObj, newdata = cFdat[, 2:ncol(cFdat)])
         if (isTRUE(plot)) {
             predAll <- predict(
                 object = ldaObj, newdata = allDat[, 2:ncol(allDat)]
             )
-            plot_df <- data.frame(Taxon = as.factor(allDat[,1]), lda = predAll$x)
-            cc1 <- 12
-            brewer_pallette <- brewer.pal(9,"Set1")
+            plot_df <- data.frame(
+                Taxon = as.factor(allDat[,1]), lda = predAll$x
+            )
+            ## plot the five most abundant predicted categories
+            abClass <- names(sort(table(predcF$class), decreasing = TRUE))[1:5]
+            abClass <- c(abClass, levels(cFdat[,1])[1])
+            plot_df <- plot_df[plot_df$Taxon %in% abClass,]
+            cc1 <- 24
+            brewer_pallette <- c(brewer.pal(5, "Set1"), "black")
             p1 <- ggplot(plot_df) +
                 geom_point(
-                    aes(lda.LD1, lda.LD2, colour = Taxon),
-                    size = 2.5
+                    aes(
+                        lda.LD1, lda.LD2,
+                        colour = Taxon, size = Taxon, shape = Taxon
+                    )
                 ) +
-                # scale_colour_manual(values=brewer_pallette) +
+                scale_colour_manual(values = brewer_pallette) +
+                scale_size_manual(values=c(rep(2, 5), 6)) +
+                scale_shape_manual(values=c(rep(16, 5), 17)) +
                 labs(
                     x = paste("LD1 (", percent(prop_lda[1]), ")", sep=""),
                     y = paste("LD2 (", percent(prop_lda[2]), ")", sep="")
                 ) +
                 theme_bw() +
                 theme(
-                  text = element_text(size=cc1),
+                  text = element_text(size = cc1),
                   axis.text.x = element_text(colour = "black", size=cc1),
                   axis.text.y = element_text(colour = "black", size=cc1)
-              )
+                )
             ggsave(
                 p1,
                 file = paste0(fname, ".png"),
