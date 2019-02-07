@@ -99,7 +99,7 @@ setMethod("MCUFD",
 #'
 #' @examples
 #'    MCUFD_plot(
-#'        MCUFD_tmp, type = "bar", fname = "MCUFD_bar_kingdom", n = 100,
+#'        cFres, type = "bar", fname = "MCUFD_bar_kingdom", n = 100,
 #'        rank = "Kingdom"
 #'    )
 #'
@@ -125,8 +125,8 @@ setMethod("MCUFD_plot",
         ## get the five most common taxon ranks:
         keepTax <- sort(
             as.data.frame(
-                cFres %>% count_(rank, sort = TRUE) %>% top_n(5, n)
-            )[,1]
+                cFres %>% count_(rank, sort = TRUE) %>% top_n(n = 5, wt = n)
+            )[1:5,1]
         )
         cFtop <- subset(cFres, cFres[,1] %in% keepTax)
         cFres$retax <- ifelse(
