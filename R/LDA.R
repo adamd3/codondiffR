@@ -262,11 +262,10 @@ setMethod("bootstrap_LDA",
 #'
 #' @examples
 #'    predLDA <- predict_LDA(
-#'        tmp2norm, LDA_tmp2, rank = "Phylum",
-#'        minlen = 600, fname = "lda_tmp2", height = 5, width = 7,
-#'        identifier = "Narnavirus"
+#'        tmp2norm, LDA_tmp2, rank = "Phylum", plot = TRUE,
+#'        minlen = 600, fname = "lda_tmp2", height = 5, width = 7
 #'    )
-#'    sort(table(predLDA$class))
+#'    head(sort(table(predLDA$class), decreasing = TRUE))
 #'
 #' @rdname plots
 #'
@@ -313,22 +312,27 @@ setMethod("predict_LDA",
             plot_df <- data.frame(
                 Taxon = as.factor(allDat[,1]), lda = predAll$x
             )
-            ## plot the five most abundant predicted categories
-            abClass <- names(sort(table(predcF$class), decreasing = TRUE))[1:5]
+            ## plot the n most abundant predicted categories
+            nplot <- 5
+            abClass <- names(
+                sort(table(predcF$class), decreasing = TRUE)
+            )[1:nplot]
             abClass <- c(abClass, levels(cFdat[,1])[1])
             plot_df <- plot_df[plot_df$Taxon %in% abClass,]
-            cc1 <- 24
-            brewer_pallette <- c(brewer.pal(5, "Set1"), "black")
+            cc1 <- 12
+            brewer_pallette <- c(brewer.pal(nplot, "Set1"), "black")
             p1 <- ggplot(plot_df) +
                 geom_point(
                     aes(
                         lda.LD1, lda.LD2,
-                        colour = Taxon, size = Taxon, shape = Taxon
+                        colour = Taxon, size = Taxon,
+                        shape = Taxon, alpha = Taxon
                     )
                 ) +
                 scale_colour_manual(values = brewer_pallette) +
-                scale_size_manual(values=c(rep(2, 5), 6)) +
-                scale_shape_manual(values=c(rep(16, 5), 17)) +
+                scale_size_manual(values = c(rep(2, nplot), 3)) +
+                scale_shape_manual(values = c(rep(16, nplot), 17)) +
+                scale_alpha_manual(values = c(rep(0.7, nplot), 1)) +
                 labs(
                     x = paste("LD1 (", percent(prop_lda[1]), ")", sep=""),
                     y = paste("LD2 (", percent(prop_lda[2]), ")", sep="")

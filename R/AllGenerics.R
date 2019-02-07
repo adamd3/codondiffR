@@ -33,6 +33,22 @@ setGeneric("seqlen", function(object) standardGeneric("seqlen"))
 
 
 ##------------------------------------------------------------------------------
+## Plot
+##------------------------------------------------------------------------------
+#' @rdname codonFreq-class
+#'
+#' @export
+setGeneric(
+    "plot",
+    function(
+        object, fname = NA_character_, units = "in", width = 10,
+        height = 7, dpi = 600
+    ) standardGeneric("plot")
+)
+
+
+
+##------------------------------------------------------------------------------
 ## Normalisation
 ##------------------------------------------------------------------------------
 #' @rdname codonFreq-class
@@ -65,7 +81,8 @@ setGeneric(
     function(
         cFres, n = NA_real_, rank = "Phylum",
         plot = FALSE, pthresh = NA_real_, fname = NA_character_,
-        units = "in", width = 10, height = 7, dpi = 600
+        units = "in", width = 10, height = 7, dpi = 600,
+        ptype = "heatmap"
     ) standardGeneric("MCUFD_enrich")
 )
 

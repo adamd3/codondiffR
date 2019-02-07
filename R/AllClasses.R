@@ -14,7 +14,7 @@ check_codonFreq <- function(object) {
 #'
 #' @slot seqID Character vector of sequence identifiers, derived from Fasta
 #'    identifier lines.
-#' @slot codon_perc Matrix containing the relative frequencies of codons; each
+#' @slot freq Matrix containing the relative frequencies of codons; each
 #'    sequence is a row and each codon is a column.
 #' @slot ncod Numeric vector of sequence lengths (in codons).
 setClass(

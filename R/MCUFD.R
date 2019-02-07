@@ -29,7 +29,10 @@ NULL
 #'    \code{codonFreq} sequences are in columns.
 #'
 #' @examples
-#' ## To be added
+#'    MCUFD_tmp2 <- MCUFD(tmp2norm, exclude = exclCod)
+#'    range(MCUFD_tmp2[[1]]$MCUFD)
+#'    table(MCUFD_tmp2[[1]]$Kingdom, useNA = "always")
+#'    MCUFD_tmp2[[1]]$Species[1:10]
 #'
 #' @name MCUFD
 #' @rdname MCUFD
@@ -107,9 +110,9 @@ setMethod("MCUFD_plot",
     signature(cFres = "list"),
     function(cFres, type, n, rank, fname, units, width, height, dpi) {
         keepCols <- switch(rank,
-            "Domain" = c(4, 68, 69),
-            "Kingdom" = c(5, 68, 69),
-            "Phylum" = c(6, 68, 69)
+            "Domain" = c(4, ncol(cFres[[1]])-1, ncol(cFres[[1]])),
+            "Kingdom" = c(5,  ncol(cFres[[1]])-1, ncol(cFres[[1]])),
+            "Phylum" = c(6,  ncol(cFres[[1]])-1, ncol(cFres[[1]]))
         )
         if (!is.na(n)) {
             cFres <- lapply(cFres, "[", 1:n, keepCols, drop = FALSE)
@@ -156,7 +159,7 @@ setMethod("MCUFD_plot",
                     plot.margin = unit(c(1,1,1,1), "cm")
                 ) +
                 xlab("Sequence") +
-                ylab(paste0("Proportion of top ", n, " taxa"))+
+                ylab(paste0("Proportion of top ", n, " taxa")) +
                 scale_x_discrete(expand = c(0.03, 0)) +
                 scale_y_continuous(expand = c(0.02, 0))
         } else if (type == "histogram") {
@@ -186,7 +189,7 @@ setMethod("MCUFD_plot",
             height = height,
             dpi = dpi
         )
-        plt
+        invisible(plt)
     }
 )
 
@@ -248,58 +251,98 @@ setMethod("MCUFD_plot",
 #' @param plot Logical, should the enrichment results be plotted?
 #'    Default = FALSE.
 #' @param pthresh Numeric, adjusted p-value threshold to be used for subsetting
-#'    the data if plot == TRUE.
+#'    the data if plot == TRUE. Default = NA.
 #' @param fname Character, name of the output file (used if plot == TRUE).
 #' @param units Numeric, units to be used for defining the plot size.
 #'    Options are "in" (default), "cm", and "mm".
 #' @param width Numeric, width of the figure (in \code{units}).
 #' @param height Numeric, height of the figure (in \code{units}).
 #' @param dpi Numeric, resolution of the figure (default = 600).
+#' @param ptype Character, type of plot to make (if plot == TRUE).  Options are
+#'    "heatmap" (default) and "dotplot".
 #'
 #' @return A list of data frames containing enrichment results.
 #'
 #' @examples
 #'    enrich_tmp <- MCUFD_enrich(
-#'        MCUFD_tmp, n = 100, rank = "Phylum", plot = TRUE, pthresh = 0.05,
+#'        MCUFD_tmp, n = 100, rank = "Phylum", plot = TRUE, pthresh = 0.01,
 #'        fname = "enrich_tmp2", height = 5, width = 7
 #'    )
 #'
 #' @export
 setMethod("MCUFD_enrich",
     signature(cFres = "list"),
-    function(cFres, n, rank, plot, pthresh, fname, units, width, height, dpi) {
+    function(
+        cFres, n, rank, plot, pthresh, fname,
+        units, width, height, dpi, ptype
+    ) {
         resList <- vector("list", length(cFres))
         sapply(seq_along(cFres), function(i) {
             resList[[i]] <<- .enrichTest(cFres[[i]], n, rank)
         })
         if (isTRUE(plot)) {
-            resMerge <- dplyr::bind_rows(resList)
+            resMerge <- dplyr::bind_rows(resList, .id = "seqid")
             if (!is.na(pthresh)) {
-                resMerge <- subset(resMerge, padj < pthresh)
+                # resMerge <- subset(resMerge, padj < pthresh)
+                keepTax <- unique(resMerge$Taxon[resMerge$padj < pthresh])
+                resMerge <- subset(resMerge, Taxon %in% keepTax)
+                resMerge$padj <- ifelse(
+                    resMerge$padj < pthresh, resMerge$padj, 0
+                )
             }
             resMelt <- melt(
+                resMerge, id.vars = c("Taxon", "seqid"),
+                measure.vars = "foldEnrich"
+            )
+            subMelt <- melt(
                 resMerge, id.vars = c("Taxon"), measure.vars = "foldEnrich"
             )
             resMelt$Taxon <- factor(
                 resMelt$Taxon, levels = rev(levels(factor(resMelt$Taxon)))
             )
+            resMelt$seqid <- factor(
+                resMelt$seqid, levels = c(1:length(resMelt$seqid))
+            )
+            subMelt$Taxon <- factor(
+                subMelt$Taxon, levels = rev(levels(factor(subMelt$Taxon)))
+            )
             cc1 <- 12
-            plt <- ggplot(
-                    resMelt, aes(x = Taxon, y = value)
-                ) +
-                geom_point(
-                    shape = 21, size = 4, fill = "red", alpha = 0.5,
-                    show.legend = FALSE
-                ) +
-                theme_classic() +
-                theme(text = element_text(size = cc1)) +
-                coord_flip() +
-                geom_hline(
-                    yintercept = 0, linetype = "dashed",
-                    color = "grey", size = 1
-                ) +
-                xlab("Taxon") +
-                ylab(paste0("Fold enrichment in top ", n, " taxa"))
+            heatpal <- brewer.pal(3, "Set1")[c(3,1)]
+            heatlim <- c(
+                floor(min(resMelt$value)), ceiling(max(resMelt$value))
+            )
+            plt <- switch(ptype,
+                "dotplot" = ggplot(subMelt, aes(x = Taxon, y = value)) +
+                    geom_point(
+                        shape = 21, size = 4, fill = "red", alpha = 0.5,
+                        show.legend = FALSE
+                    ) +
+                    theme_classic() +
+                    theme(text = element_text(size = cc1)) +
+                    coord_flip() +
+                    geom_hline(
+                        yintercept = 0, linetype = "dashed",
+                        color = "grey", size = 1
+                    ) +
+                    xlab("Taxon") +
+                    ylab(paste0("Fold enrichment in top ", n, " taxa")),
+                "heatmap" = ggplot(
+                    resMelt, aes(x = seqid, y = Taxon, fill = value)
+                    ) +
+                    geom_tile(colour = "black") +
+                    scale_fill_gradient2(
+                        paste0("Fold enrichment\nin top ", n, " taxa"),
+                        low = heatpal[1],
+                        mid = "white", high = heatpal[2],
+                        midpoint = 0, limits = heatlim
+                    ) +
+                    theme_bw() +
+                    theme(
+                        panel.grid.major = element_blank(),
+                        panel.grid.minor = element_blank()
+                    ) +
+                    xlab("Sequence")
+            )
             ggsave(
                 plt,
                 file = paste0(fname, ".png"),

@@ -112,6 +112,72 @@ setMethod("show", "codonFreq", function(object) {
 
 
 ##------------------------------------------------------------------------------
+## Plot method
+##------------------------------------------------------------------------------
+#' Make a boxplot of the data in a \code{codonFreq} object.
+#'
+#' @rdname plot-codonFreq
+#'
+#' @param object A \code{codonFreq} object.
+#' @param fname Character, name of figure generated.
+#' @param units Numeric, units to be used for defining the plot size.
+#'    Options are "in" (default), "cm", and "mm".
+#' @param width Numeric, width of the figure (in \code{units}).
+#' @param height Numeric, height of the figure (in \code{units}).
+#' @param dpi Numeric, resolution of the figure (default = 600).
+#'
+#' @export
+setMethod(
+    "plot",
+    "codonFreq",
+    function(
+        object, fname, units, width, height, dpi) {
+        sc <- length(object@seqID)
+        cdf <- as.data.frame(object@freq)
+        cdf$Taxon <- object@seqID
+        codMeds <- apply(cdf[, 1:(ncol(cdf)-1)], 2, FUN = median)
+        codon_melt <- melt(cdf, variable.id = c("Taxon"))
+        codon_melt$variable <- gsub("T", "U", codon_melt$variable)
+        codon_melt$variable <- factor(
+            codon_melt$variable,
+            levels = gsub("T", "U", names(sort(codMeds, decreasing = TRUE)))
+        )
+        brewer_pallette1 <- brewer.pal(9,"Set1")
+        cols <- rep(brewer_pallette1[1], 64)
+        cc1 <- 12
+        p1 <- ggplot(
+            codon_melt, aes(x = variable, y = value, fill = variable)
+        ) +
+            geom_boxplot() +
+            scale_colour_manual("Codon", values = cols) +
+            scale_fill_manual("Codon", values = cols) +
+            labs(y = "Proportion of codons", x = "Codon") +
+            theme_bw() +
+            theme(
+                legend.position = "none",
+                text = element_text(size=cc1),
+                axis.text.x = element_text(
+                    colour = "black", size=cc1*0.75, angle=45,
+                    margin = margin(15,0,0,0)
+                ),
+                axis.title.x = element_blank(),
+                axis.title.y = element_text(margin = margin(0,15,0,0)),
+                axis.text.y = element_text(colour = "black", size=cc1)
+            )
+        ggsave(
+            p1,
+            file = paste0(fname, ".png"),
+            device = "png",
+            units = units,
+            width = width,
+            height = height,
+            dpi = dpi
+        )
+})
+
+
+
+##------------------------------------------------------------------------------
 ## Accessor methods
 ##------------------------------------------------------------------------------
 #' @describeIn codonFreq Returns the relative frequencies of codons per sequence
