@@ -100,19 +100,21 @@ setMethod("LDA",
             var(x, na.rm = TRUE)
         })
         rmvars <- names(colVars[colVars == 0])
-        gbnorm <- gbnorm[, -which(names(gbnorm) %in% rmvars)]
         ## drop collinear variables
-        cormat <- cor(
-            gbnorm[, 2:ncol(gbnorm)],
-            gbnorm[, 2:ncol(gbnorm)],
-            use = "pairwise.complete.obs"
-        )
-        rmvars <- findCorrelation(
-            cormat,
-            cutoff = corCut,
-            verbose = FALSE,
-            names = TRUE
-        )
+        if (corCut < 1) {
+            cormat <- cor(
+                gbnorm[, 2:ncol(gbnorm)],
+                gbnorm[, 2:ncol(gbnorm)],
+                use = "pairwise.complete.obs"
+            )
+            rmcor <- findCorrelation(
+                cormat,
+                cutoff = corCut,
+                verbose = FALSE,
+                names = TRUE
+            )
+            rmvars <- c(rmvars, rmcor)
+        }
         gbnorm <- gbnorm[, -which(names(gbnorm) %in% rmvars)]
         gbnorm[,1] <- as.factor(gbnorm[,1])
         ntrain <- round((nrow(gbnorm) * propTrain), digits = 0)
@@ -193,19 +195,21 @@ setMethod("bootstrap_LDA",
             var(x, na.rm = TRUE)
         })
         rmvars <- names(colVars[colVars == 0])
-        gbnorm <- gbnorm[, -which(names(gbnorm) %in% rmvars)]
         ## drop collinear variables
-        cormat <- cor(
-            gbnorm[, 2:ncol(gbnorm)],
-            gbnorm[, 2:ncol(gbnorm)],
-            use = "pairwise.complete.obs"
-        )
-        rmvars <- findCorrelation(
-            cormat,
-            cutoff = corCut,
-            verbose = FALSE,
-            names = TRUE
-        )
+        if (corCut < 1) {
+            cormat <- cor(
+                gbnorm[, 2:ncol(gbnorm)],
+                gbnorm[, 2:ncol(gbnorm)],
+                use = "pairwise.complete.obs"
+            )
+            rmcor <- findCorrelation(
+                cormat,
+                cutoff = corCut,
+                verbose = FALSE,
+                names = TRUE
+            )
+            rmvars <- c(rmvars, rmcor)
+        }
         gbnorm <- gbnorm[, -which(names(gbnorm) %in% rmvars)]
         resList$codons <- colnames(gbnorm)[2:ncol(gbnorm)]
         resList$taxa <- unique(gbnorm[,1])
