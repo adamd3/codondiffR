@@ -8,4 +8,4 @@
 *.dmp
 *.tsv
 *.accession2taxid.gz
-*.png
+Figures/

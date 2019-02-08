@@ -141,6 +141,8 @@ setMethod("show", "codonFreq", function(object) {
 #' @param height Numeric, height of the figure (in \code{units}).
 #' @param dpi Numeric, resolution of the figure (default = 600).
 #'
+#' @return A \code{ggplot} object.
+#'
 #' @export
 setMethod(
     "plot",
@@ -188,6 +190,7 @@ setMethod(
             height = height,
             dpi = dpi
         )
+        p1
 })
 
 
