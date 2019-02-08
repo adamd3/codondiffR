@@ -6,5 +6,6 @@
 #' differences in these metrics between taxa.
 #'
 #' @docType package
+#' @import methods
 #' @name codondiffR
 NULL

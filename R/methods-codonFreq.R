@@ -14,6 +14,21 @@
 #' @importFrom Biostrings width
 NULL
 
+
+##------------------------------------------------------------------------------
+## Validity check
+##------------------------------------------------------------------------------
+setMethod(.validity, "codonFreq", function(object) {
+    errors <- character()
+    if (!is.numeric(object@freq)) {
+        msg <- paste("Codon frequencies must be numeric values. \n")
+        errors <- c(errors, msg)
+    }
+    if (length(errors) == 0) TRUE else errors
+})
+
+
+
 ##------------------------------------------------------------------------------
 ## Read in sequences
 ##------------------------------------------------------------------------------

@@ -1,13 +1,4 @@
-#' @import methods
-
-check_codonFreq <- function(object) {
-    errors <- character()
-    if (!is.numeric(object@freq)) {
-        msg <- paste("Codon frequencies must be numeric values. \n")
-        errors <- c(errors, msg)
-    }
-    if (length(errors) == 0) TRUE else errors
-}
+setGeneric(".validity", function(object) standardGeneric(".validity"))
 
 
 #' S4 class for storing relative codon frequencies in user-supplied sequences.
@@ -29,5 +20,5 @@ setClass(
         freq = matrix(nrow = 0, ncol = 0),
         ncod = NA_real_
     ),
-    validity = check_codonFreq
+    validity= .validity
 )
