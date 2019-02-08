@@ -9,3 +9,4 @@
 *.tsv
 *.accession2taxid.gz
 Figures/
+inst/extdata/example.fna
