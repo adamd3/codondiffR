@@ -34,9 +34,9 @@ NULL
 #' @param exclude A character vector of codons to be excluded from comparisons.
 #' @param minlen Numeric, the minimum length of sequence (in codons) to be
 #'    included in the analysis. Default = 500.
-#' @param norm Logical, should the codon abundances be normalised? If TRUE, a
-#'    normalisation step will be performed, such that the proportions for each
-#'    codon sum to 1. Default = FALSE.
+#' @param norm Logical, should the codon abundances be normalised? If TRUE,
+#'    codon abundances will be converted to codon bias scores, such that the sum
+#'    of scores for each amino acid sum to 1. Default = FALSE.
 #' @param trans Logical; if true, a Box-Cox transformation will be applied to
 #'    the data. Default = FALSE.
 #' @param propTrain Numeric, proportion of the reference database to use for
@@ -136,9 +136,9 @@ setMethod("LDA",
 #' @param exclude A character vector of codons to be excluded from comparisons.
 #' @param minlen Numeric, the minimum length of sequence (in codons) to be
 #'    included in the analysis. Default = 500.
-#' @param norm Logical, should the codon abundances be normalised? If TRUE, a
-#'    normalisation step will be performed, such that the proportions for each
-#'    codon sum to 1. Default = FALSE.
+#' @param norm Logical, should the codon abundances be normalised? If TRUE,
+#'    codon abundances will be converted to codon bias scores, such that the sum
+#'    of scores for each amino acid sum to 1. Default = FALSE.
 #' @param trans Logical; if true, a Box-Cox transformation will be applied to
 #'    the data. Default = FALSE.
 #' @param propTrain Numeric, proportion of the reference database to use for
@@ -253,9 +253,9 @@ setMethod("bootstrap_LDA",
 #' @param width Numeric, width of the figure (in \code{units}).
 #' @param height Numeric, height of the figure (in \code{units}).
 #' @param dpi Numeric, resolution of the figure (default = 600).
-#' @param norm Logical, should the codon abundances be normalised? If TRUE, a
-#'    normalisation step will be performed, such that the proportions for each
-#'    codon sum to 1. Default = FALSE.
+#' @param norm Logical, should the codon abundances be normalised? If TRUE,
+#'    codon abundances will be converted to codon bias scores, such that the sum
+#'    of scores for each amino acid sum to 1. Default = FALSE.
 #' @param plot Logical, should the enrichment results be plotted?
 #'    Default = FALSE.
 #' @param identifier Character, optional group label to be assigned to sequences
