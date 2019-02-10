@@ -114,10 +114,10 @@ setMethod("MCUFD_plot",
             "Kingdom" = c(5,  ncol(cFres[[1]])-1, ncol(cFres[[1]])),
             "Phylum" = c(6,  ncol(cFres[[1]])-1, ncol(cFres[[1]]))
         )
-        if (!is.na(n)) {
-            cFres <- lapply(cFres, "[", 1:n, keepCols, drop = FALSE)
-        } else {
+        if (is.na(n)) {
             cFres <- lapply(cFres, "[", , keepCols, drop = FALSE)
+        } else {
+            cFres <- lapply(cFres, "[", 1:n, keepCols, drop = FALSE)
         }
         cFres <- dplyr::bind_rows(cFres)
         cFres$seqid <- as.factor(str_sub(cFres$seqid, 1, 20))

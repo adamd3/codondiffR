@@ -296,10 +296,10 @@ setMethod("predict_LDA",
         )
         cFdat <- cbind(cFobj@seqID, as.data.frame(cFobj@freq))
         colnames(cFdat)[1] <- colnames(gbnorm)[1] <- "Taxon"
-        if (!is.na(identifier)) {
-            cFdat[,1] <- as.factor(identifier)
-        } else {
+        if (is.na(identifier)) {
             cFdat[,1] <-  as.factor(str_sub(cFdat[,1], 1, 20))
+        } else {
+            cFdat[,1] <- as.factor(identifier)
         }
         allDat <- rbind(gbnorm, cFdat)
         allDat[,1] <- as.factor(allDat[,1])
