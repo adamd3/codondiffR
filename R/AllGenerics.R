@@ -33,7 +33,7 @@ setGeneric("seqlen", function(object) standardGeneric("seqlen"))
 
 
 ##------------------------------------------------------------------------------
-## Plot
+## Plots
 ##------------------------------------------------------------------------------
 #' @rdname codonFreq-class
 #'
@@ -42,10 +42,18 @@ setGeneric(
     "plot",
     function(
         object, fname = NA_character_, units = "in", width = 10,
-        height = 7, dpi = 600
+        height = 7, dpi = 600, groups = NULL, ptype = "boxplot",
+        order = "median", colour = "red"
     ) standardGeneric("plot")
 )
 
+setGeneric(
+    "biasPlot",
+    function(
+        object, fname = NA_character_, units = "in", width = 10,
+        height = 7, dpi = 600, groups = NULL, aa = NULL, norm = FALSE
+    ) standardGeneric("biasPlot")
+)
 
 
 ##------------------------------------------------------------------------------
