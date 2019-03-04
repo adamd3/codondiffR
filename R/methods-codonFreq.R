@@ -149,9 +149,12 @@ setMethod("show", "codonFreq", function(object) {
 #'    (median) sorts codons by median usage in the full dataset. An alternative
 #'    option is "alphabetical". A vector of (64) codons can also be passed,
 #'    which will be used for ordering, exactly as in the vector.
-#' @param colour Character, colour of the boxes/points to be plotted. Options
-#'    are "red" (default), "blue", and "green". Only applies to non-grouped
-#'    plots.
+#' @param colour Integer, between 1 and 9, which specifies the colour to be used
+#'    from the `Set1` palette in the RColorBrewer package. Only applies to
+#'    non-grouped plots. Default = 1 (red).
+#' @param suppress_x_txt Logical, suppress x axis labels? Default = FALSE.
+#' @param suppress_y_title Logical, suppress y axis title? Default = FALSE.
+#' @param label Character, optional label to add to the plotting area.
 #'
 #' @return A \code{ggplot} object.
 #'
@@ -160,7 +163,8 @@ setMethod(
     "plot",
     "codonFreq",
     function(
-        object, fname, units, width, height, dpi, groups, ptype, order, colour
+        object, fname, units, width, height, dpi, groups, ptype, order,
+        colour, suppress_x_txt, suppress_y_title, label
     ) {
         sc <- length(object@seqID)
         cdf <- as.data.frame(object@freq)
@@ -169,12 +173,24 @@ setMethod(
         codMeds <- apply(cdf[, 1:(ncol(cdf)-1)], 2, FUN = median)
         brewer_pallette1 <- brewer.pal(9,"Set1")
         cc1 <- 12
-        if (is.null(groups)) {
-            cols <- switch(colour,
-                "red" = rep(brewer_pallette1[1], 64),
-                "blue" = rep(brewer_pallette1[2], 64),
-                "green" = rep(brewer_pallette1[3], 64),
+        if (isTRUE(suppress_x_txt)) {
+            xtxt = element_blank()
+        } else {
+            xtxt = element_text(
+                colour = "black", size=cc1*1.2,
+                angle = 90, hjust = 0.1, vjust = 0.5,
+                margin = margin(10,0,0,0)
             )
+        }
+        if (isTRUE(suppress_y_title)) {
+            ytit = element_blank()
+        } else {
+            ytit = element_text(
+                margin = margin(0,20,0,0), size=cc1
+            )
+        }
+        if (is.null(groups)) {
+            cols <- rep(brewer_pallette1[colour], 64)
             codon_melt <- melt(cdf, variable.id = c("Taxon"))
             codon_melt$variable <- gsub("T", "U", codon_melt$variable)
             if (order[1] == "alphabetical") {
@@ -215,25 +231,19 @@ setMethod(
                 theme_bw() +
                 # coord_flip() +
                 theme(
-                    text = element_text(size=cc1),
-                    axis.text.x = element_text(
-                        colour = "black", size=cc1*1.2,
-                        angle = 90, hjust = 0.1, vjust = 0.5,
-                        margin = margin(10,0,0,0)
-                    ),
-                    # axis.title.x = element_text(
-                    #     colour = "black", size=cc1,
-                    #     hjust = 0.5, #vjust = -1.5,
-                    #     margin = margin(20,0,0,0)
-                    # ),
+                    axis.text.x = xtxt,
                     axis.title.x = element_blank(),
-                    axis.title.y = element_text(
-                        margin = margin(0,20,0,0), size=cc1*1.5
-                    ),
-                    axis.text.y = element_text(colour = "black", size=cc1*1.5),
+                    axis.title.y = ytit,
+                    axis.text.y = element_text(colour = "black", size=cc1*1.2),
                     legend.position = "none"
                 )
-
+            if (!is.null(label)) {
+                p1 <- p1 + annotate(
+                    "text", label = label, x = 64,
+                    y = max(codon_melt$value)-0.001, size = 6,
+                    hjust = 1
+                )
+            }
         } else if (length(groups) == sc) {
             cdf <- cbind(cdf, groups)
             cdf$groups <- as.factor(cdf$groups)
@@ -295,7 +305,7 @@ setMethod(
                         margin = margin(0,20,0,0), size=cc1
                     ),
                     axis.text.y = element_text(colour = "black", size=cc1),
-                    legend.position = "bottom",
+                    legend.position = "right",
                     legend.text = element_text(size = cc1)
                 )
         } else {
@@ -333,6 +343,15 @@ setMethod(
 #'    (must be specified using single letter IUPAC code).
 #' @param norm Logical, should the data be normalised? If TRUE, a normalisation
 #'    step will be performed. Default = FALSE.
+#' @param label Character, optional label to add to the plotting area.
+#' @param colours Optional vector of same length as `groups`, containing integers
+#'    between 1 and 9, which specifies the colours to be used from the `Set1`
+#'    palette in the RColorBrewer package. By default, the Set1 order is used.
+#' @param suppress_y_txt Logical, suppress y axis labels? Default = FALSE.
+#' @param suppress_y_title Logical, suppress y axis title? Default = FALSE.
+#' @param legend Logical, plot a legend? Default = TRUE.
+#' @param ylim Numeric vector, gives the y-axis limits (if not supplied, they
+#'    will be chosen based on the data).
 #'
 #' @return A \code{ggplot} object.
 #'
@@ -341,7 +360,8 @@ setMethod(
     "biasPlot",
     "codonFreq",
     function(
-        object, fname, units, width, height, dpi, groups, aa, norm
+        object, fname, units, width, height, dpi, groups, aa, norm, label,
+        colours, suppress_y_txt, suppress_y_title, legend, ylim
     ) {
         if (isTRUE(norm)) object <- normalise(object)
         sc <- length(object@seqID)
@@ -355,15 +375,44 @@ setMethod(
         cdf$Taxon <- object@seqID
         brewer_pallette1 <- brewer.pal(9,"Set1")
         cc1 <- 12
+        if (isTRUE(suppress_y_txt)) {
+            ytxt = element_blank()
+        } else {
+            ytxt = element_text(
+                colour = "black", size=cc1*1.2,
+                margin = margin(0,10,0,0)
+            )
+        }
+        if (isTRUE(suppress_y_title)) {
+            ytit = element_blank()
+        } else {
+            ytit = element_text(
+                margin = margin(0,10,0,0), size=cc1*1.2
+            )
+        }
         if (length(groups) == sc) {
             cdf <- cbind(cdf, groups)
-            cdf$groups <- as.factor(cdf$groups)
+            cdf$groups <- factor(cdf$groups, levels = unique(groups))
         } else {
             stop("`groups` vector must be same length as codonFreq object")
         }
-        cols <- brewer_pallette1[1:nlevels(cdf$groups)]
+        if (is.null(colours)) {
+            cols <- brewer_pallette1[1:nlevels(cdf$groups)]
+        } else if (length(colours) == nlevels(cdf$groups)) {
+            cols <- brewer_pallette1[colours]
+        } else {
+            stop("`colours` vector must be same length as number of groups")
+        }
         codon_melt <- melt(cdf, variable.id = c("Taxon", "groups"))
         codon_melt$variable <- gsub("T", "U", codon_melt$variable)
+        if (is.null(ylim)) {
+            y1 <- c(
+                min(codon_melt$value)-0.05, max(codon_melt$value)+0.05
+            )
+        } else {
+            y1 <- ylim
+        }
+        lgd <- ifelse(isTRUE(legend), "right", "none")
         p1 <- ggplot(
                 codon_melt, aes(x = variable, y = value, fill = groups)
             ) +
@@ -374,17 +423,174 @@ setMethod(
             scale_fill_manual("", values = cols) +
             labs(y = "Proportion of codons", x = "Codon") +
             theme_bw() +
+            ylim(y1) +
             theme(
-                legend.text = element_text(size = cc1),
-                text = element_text(size=cc1),
+                legend.text = element_text(size = cc1*1.2),
+                text = element_text(size=cc1*1.2),
                 axis.text.x = element_text(
-                    colour = "black", size=cc1#,
+                    colour = "black", size=cc1*1.2,
                     # angle = 90, hjust = 0.1, vjust = 0.5
-                    #margin = margin(15,0,0,0)
+                    margin = margin(10,0,0,0)
                 ),
                 axis.title.x = element_blank(),
-                axis.title.y = element_text(margin = margin(0,5,0,0)),
-                axis.text.y = element_text(colour = "black", size=cc1)
+                axis.title.y = ytit,
+                axis.text.y = ytxt,
+                legend.position = lgd
+            )
+        if (!is.null(label)) {
+            p1 <- p1 + annotate(
+                "text", label = label, x = length(keepCod)+0.5,
+                y = y1[2]-0.001, size = 6,
+                hjust = 1
+            )
+        }
+        ggsave(
+            p1,
+            file = paste0(fname, ".png"),
+            device = "png",
+            units = units,
+            width = width,
+            height = height,
+            dpi = dpi
+        )
+        invisible(p1)
+})
+
+
+#' GC3 plots: plot the 3rd-codon GC content for sequences in a \code{codonFreq}
+#'   object.
+#'
+#' @rdname plot-codonFreq
+#'
+#' @param object A \code{codonFreq} object.
+#' @param fname Character, name of figure generated.
+#' @param units Numeric, units to be used for defining the plot size.
+#'    Options are "in" (default), "cm", and "mm".
+#' @param width Numeric, width of the figure (in \code{units}).
+#' @param height Numeric, height of the figure (in \code{units}).
+#' @param dpi Numeric, resolution of the figure (default = 600).
+#' @param groups Character, optional vector giving groups for each of the
+#'    sequences in the \code{codonFreq} object. If not supplied, the sequences
+#'    will be treated as a single group.
+#' @param aa Character, amino acid for which codon bias plot will be made
+#'    (must be specified using single letter IUPAC code).
+#' @param norm Logical, should the data be normalised? If TRUE, a normalisation
+#'    step will be performed. Default = FALSE.
+#' @param label Character, optional label to add to the plotting area.
+#' @param colours Optional vector of same length as `groups`, containing integers
+#'    between 1 and 9, which specifies the colours to be used from the `Set1`
+#'    palette in the RColorBrewer package. By default, the Set1 order is used.
+#' @param suppress_y_txt Logical, suppress y axis labels? Default = FALSE.
+#' @param suppress_y_title Logical, suppress y axis title? Default = FALSE.
+#' @param legend Logical, plot a legend? Default = TRUE.
+#' @param xlim Numeric vector, gives the x-axis limits (if not supplied, they
+#'    will be chosen based on the data).
+#' @param outtab Character (optional); name of file to which GC3 data will be
+#'     saved. Format is tab-delimited.
+#'
+#' @return A \code{ggplot} object.
+#'
+#' @expor
+setMethod(
+    "gcPlot",
+    "codonFreq",
+    function(
+        object, fname, units, width, height, dpi, groups, aa, norm, label,
+        colours, suppress_y_txt, suppress_y_title, legend, xlim, outtab
+    ) {
+        sc <- length(object@seqID)
+        cdf <- as.data.frame(object@freq)
+        cdf$Taxon <- object@seqID
+        brewer_pallette1 <- brewer.pal(9,"Set1")
+        cc1 <- 12
+        if (isTRUE(suppress_y_txt)) {
+            ytxt = element_blank()
+        } else {
+            ytxt = element_text(
+                colour = "black", size=cc1*1.2,
+                margin = margin(0,10,0,0)
+            )
+        }
+        if (isTRUE(suppress_y_title)) {
+            ytit = element_blank()
+        } else {
+            ytit = element_text(
+                margin = margin(0,10,0,0), size=cc1*1.2
+            )
+        }
+        if (length(groups) == sc) {
+            cdf <- cbind(cdf, groups)
+            cdf$groups <- factor(cdf$groups, levels = sort(unique(groups)))
+        } else {
+            stop("`groups` vector must be same length as codonFreq object")
+        }
+        if (is.null(colours)) {
+            cols <- brewer_pallette1[1:nlevels(cdf$groups)]
+        } else if (length(colours) == nlevels(cdf$groups)) {
+            cols <- brewer_pallette1[colours]
+        } else {
+            stop("`colours` vector must be same length as number of groups")
+        }
+        ## get GC3% per taxon
+        third_gc_idx <- which(
+            str_sub(colnames(cdf)[1:64], -1, -1) %in% c("G", "C")
+        )
+        cdfGC <- cbind(
+            (cdf)[,65:ncol(cdf)],
+            rowSums(cdf[,third_gc_idx])
+        )
+        colnames(cdfGC) <- c("Taxon", "groups", "GC3_proportion")
+        codon_melt <- melt(cdfGC, variable.id = c("Taxon", "groups"))
+        if (is.null(xlim)) {
+            x1 <- c(
+                min(codon_melt$value)-0.05, max(codon_melt$value)+0.05
+            )
+        } else {
+            x1 <- xlim
+        }
+        lgd <- ifelse(isTRUE(legend), "right", "none")
+        if (!is.null(outtab)) {
+            write.table(
+                cdfGC, file = paste0(outtab, ".tsv"),
+                quote = FALSE, sep = "\t", row.names = FALSE
+             )
+        }
+        group_means <- cdfGC %>%
+            group_by(groups) %>%
+            dplyr::summarize(mean = mean(GC3_proportion, na.rm=TRUE))
+        group_means <- group_means$mean
+        p1 <- ggplot(
+            codon_melt, aes(x = value, colour = groups)
+            ) +
+            geom_density(size = 1) +
+            theme_bw() +
+            xlim(x1) +
+            geom_vline(
+                xintercept = c(group_means),
+                linetype = "dashed",
+                color = c(cols),
+                size = 1
+            ) +
+            # scale_y_continuous(
+            #     labels = function(x) format(
+            #         x, scientific = FALSE, digits = 1, nsmall = 4
+            #     )
+            # ) +
+            labs(
+                x = "GC3 proportion in codons", y = "Density"
+            ) +
+            scale_colour_manual("Group", values = cols) +
+            theme(
+                text = element_text(size=cc1),
+                axis.text.x = element_text(colour = "black", size=cc1),
+                axis.title.x = element_text(
+                    colour = "black", size=cc1, margin = margin(5,0,0,0)
+                ),
+                axis.title.y = element_text(
+                    colour = "black", size=cc1, margin = margin(0,5,0,0)
+                ),
+                axis.text.y = element_text(colour = "black", size=cc1),
+                legend.position = "right"
             )
         ggsave(
             p1,

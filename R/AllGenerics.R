@@ -43,7 +43,8 @@ setGeneric(
     function(
         object, fname = NA_character_, units = "in", width = 10,
         height = 7, dpi = 600, groups = NULL, ptype = "boxplot",
-        order = "median", colour = "red"
+        order = "median", colour = 1, suppress_x_txt = FALSE,
+        suppress_y_title = FALSE, label = NULL
     ) standardGeneric("plot")
 )
 
@@ -51,8 +52,21 @@ setGeneric(
     "biasPlot",
     function(
         object, fname = NA_character_, units = "in", width = 10,
-        height = 7, dpi = 600, groups = NULL, aa = NULL, norm = FALSE
+        height = 7, dpi = 600, groups = NULL, aa = NULL, norm = FALSE,
+        label = NULL, colours = NULL, suppress_y_txt = FALSE,
+        suppress_y_title = FALSE, legend = TRUE, ylim = NULL
     ) standardGeneric("biasPlot")
+)
+
+setGeneric(
+    "gcPlot",
+    function(
+        object, fname = NA_character_, units = "in", width = 10,
+        height = 7, dpi = 600, groups = NULL, aa = NULL, norm = FALSE,
+        label = NULL, colours = NULL, suppress_y_txt = FALSE,
+        suppress_y_title = FALSE, legend = TRUE, xlim = NULL,
+        outtab = NULL
+    ) standardGeneric("gcPlot")
 )
 
 

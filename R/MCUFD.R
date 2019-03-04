@@ -120,13 +120,17 @@ setMethod("MCUFD_plot",
             cFres <- lapply(cFres, "[", 1:n, keepCols, drop = FALSE)
         }
         cFres <- dplyr::bind_rows(cFres)
-        cFres$seqid <- as.factor(str_sub(cFres$seqid, 1, 20))
+        cFres$seqid <- factor(
+            str_sub(cFres$seqid, 1, 25),
+            levels = unique(str_sub(cFres$seqid, 1, 25))
+        )
         nseq <- nlevels(cFres$seqid)
-        ## get the five most common taxon ranks:
+        ## get the x most common taxon ranks:
+        x <- 5
         keepTax <- sort(
             as.data.frame(
-                cFres %>% count_(rank, sort = TRUE) %>% top_n(n = 5, wt = n)
-            )[1:5,1]
+                cFres %>% count_(rank, sort = TRUE) %>% top_n(n = x, wt = n)
+            )[1:x,1]
         )
         cFtop <- subset(cFres, cFres[,1] %in% keepTax)
         cFres$retax <- ifelse(
@@ -136,17 +140,16 @@ setMethod("MCUFD_plot",
             cFres$retax, levels = c(keepTax, "Other")
         )
         cc1 <- 12
-        brewer_pallette <- brewer.pal(8, "Set1")
+        brewer_pallette <- c(
+            brewer.pal(8, "Set1")[1], brewer.pal(8, "Set1")[5],
+            brewer.pal(8, "Set1")[2:4], brewer.pal(8, "Set1")[6:9]
+        )
         if (type == "bar") {
             plt <- ggplot(cFres, aes_string(x = "seqid", fill = "retax")) +
                 geom_bar(position = "fill") +
                 theme_classic() +
                 scale_fill_manual(
-                    values = c(
-                        brewer_pallette[1], brewer_pallette[5],
-                        brewer_pallette[2], brewer_pallette[3],
-                        brewer_pallette[4], "grey"
-                    ),
+                    values = c(brewer_pallette[1:x], "grey"),
                     name = rank,
                     breaks = levels(cFres$retax),
                     labels = levels(cFres$retax)
@@ -192,8 +195,6 @@ setMethod("MCUFD_plot",
         invisible(plt)
     }
 )
-
-
 
 
 ##------------------------------------------------------------------------------
@@ -336,12 +337,26 @@ setMethod("MCUFD_enrich",
                         mid = "white", high = heatpal[2],
                         midpoint = 0, limits = heatlim
                     ) +
+                    scale_x_discrete(
+                        name = "Sequence",
+                        labels = str_sub(names(cFres), 1, 20)
+                    ) +
                     theme_bw() +
                     theme(
-                        panel.grid.major = element_blank(),
-                        panel.grid.minor = element_blank()
+                        # panel.grid.major = element_blank(),
+                        # panel.grid.minor = element_blank(),
+                        axis.text.x = element_text(
+                            angle = 45, hjust = 1,
+                            #hjust = -0.5, #vjust = 0.5,
+                            margin = margin(2,0,0,0)
+                        ),
+                        axis.title.x = element_text(
+                            colour = "black", #size=cc1,
+                            #hjust = -0.5, #vjust = 0.5,
+                            margin = margin(2,0,0,0)
+                        )
                     ) +
-                    xlab("Sequence")
+                    ylab(rank)
             )
             ggsave(
                 plt,
