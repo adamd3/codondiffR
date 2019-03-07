@@ -211,6 +211,7 @@ setMethod("MCUFD_plot",
         foldEnrich = numeric(ntax),
         pvalue = numeric(ntax),
         padj = numeric(ntax),
+
         stringsAsFactors = FALSE
     )
     sapply(1:length(na.omit(fullTax)), function(x) {
@@ -222,7 +223,7 @@ setMethod("MCUFD_plot",
         otherCountSub <- sum(subCounts[,2]) - taxCountSub
         ratioFull <- taxCountFull/(otherCountFull+taxCountFull)
         ratioSub <- taxCountSub/(otherCountSub+taxCountSub)
-        foldEnrich <- ratioSub - ratioFull
+        foldEnrich <- (ratioSub - ratioFull)
         contTab <- matrix(
             c(taxCountFull, taxCountSub, otherCountFull, otherCountSub),
             nrow = 2, ncol = 2
@@ -261,6 +262,8 @@ setMethod("MCUFD_plot",
 #' @param dpi Numeric, resolution of the figure (default = 600).
 #' @param ptype Character, type of plot to make (if plot == TRUE).  Options are
 #'    "heatmap" (default) and "dotplot".
+#' @param outtab Character (optional); name of file to which enrichment test
+#'     results will be saved. Format is tab-delimited.
 #'
 #' @return A list of data frames containing enrichment results.
 #'
@@ -275,7 +278,7 @@ setMethod("MCUFD_enrich",
     signature(cFres = "list"),
     function(
         cFres, n, rank, plot, pthresh, fname,
-        units, width, height, dpi, ptype
+        units, width, height, dpi, ptype, outtab
     ) {
         resList <- vector("list", length(cFres))
         sapply(seq_along(cFres), function(i) {
@@ -290,6 +293,12 @@ setMethod("MCUFD_enrich",
                 resMerge$padj <- ifelse(
                     resMerge$padj < pthresh, resMerge$padj, 0
                 )
+            }
+            if (!is.null(outtab)) {
+                write.table(
+                    resMerge, file = paste0(outtab, ".tsv"),
+                    quote = FALSE, sep = "\t", row.names = FALSE
+                 )
             }
             resMelt <- melt(
                 resMerge, id.vars = c("Taxon", "seqid"),
@@ -343,12 +352,16 @@ setMethod("MCUFD_enrich",
                     ) +
                     theme_bw() +
                     theme(
+                        text = element_text(size = cc1),
                         # panel.grid.major = element_blank(),
                         # panel.grid.minor = element_blank(),
                         axis.text.x = element_text(
                             angle = 45, hjust = 1,
                             #hjust = -0.5, #vjust = 0.5,
                             margin = margin(2,0,0,0)
+                        ),
+                        axis.text.y = element_text(
+                            size=cc1, margin = margin(0,2,0,0)
                         ),
                         axis.title.x = element_text(
                             colour = "black", #size=cc1,

@@ -317,7 +317,7 @@ setMethod("predict_LDA",
                 Taxon = as.factor(allDat[,1]), lda = predAll$x
             )
             ## plot the n most abundant predicted categories
-            if (rank == "Kingdom") nplot <- 3 else nplot <- 5
+            if (rank == "Kingdom") nplot <- 3 else nplot <- 9
             abClass <- names(
                 sort(table(predcF$class), decreasing = TRUE)
             )[1:nplot]

@@ -19,7 +19,8 @@ Imports:
     stringr,
     RColorBrewer,
     reshape2,
-    scales
+    scales,
+    ggbiplot
 RoxygenNote: 6.1.1
 Collate: 
     'AllClasses.R'
