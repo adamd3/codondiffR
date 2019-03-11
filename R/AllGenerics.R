@@ -122,6 +122,37 @@ setGeneric(
 
 
 ##------------------------------------------------------------------------------
+## PCA
+##------------------------------------------------------------------------------
+#' @rdname PCA
+#'
+#' @export
+setGeneric(
+    "PCA",
+    function(
+        dat = data.frame(),
+        exclude = character(length = 0), minlen = 600,
+        norm = FALSE, rank = "Phylum", corCut = 0.9, includeTax = NULL
+    ) standardGeneric("PCA")
+)
+
+
+#' @rdname PCA
+#'
+#' @export
+setGeneric(
+    "predict_PCA",
+    function(
+        cFobj, pcaObj, rank = "Phylum",
+        minlen = 600, fname = NA_character_, units = "in",
+        width = 10, height = 7, dpi = 600, norm = FALSE, plot = FALSE,
+        identifier = NA_character_, includeTax = NULL
+    ) standardGeneric("predict_PCA")
+)
+
+
+
+##------------------------------------------------------------------------------
 ## LDA
 ##------------------------------------------------------------------------------
 #' @rdname LDA
@@ -130,8 +161,8 @@ setGeneric(
 setGeneric(
     "LDA",
     function(
-        cFobj, exclude = character(length = 0), minlen = 600,
-        norm = FALSE, trans = FALSE, propTrain = 1,
+        exclude = character(length = 0), minlen = 600,
+        trans = FALSE, propTrain = 1,
         rank = "Phylum", corCut = 0.9
     ) standardGeneric("LDA")
 )

@@ -30,13 +30,9 @@ NULL
 #'    Data can be optionally scaled using the
 #'    \href{https://goo.gl/qzN63P}{Box-Cox power transformation}.
 #'
-#' @param cFobj An object of class \code{codonFreq}.
 #' @param exclude A character vector of codons to be excluded from comparisons.
 #' @param minlen Numeric, the minimum length of sequence (in codons) to be
 #'    included in the analysis. Default = 500.
-#' @param norm Logical, should the codon abundances be normalised? If TRUE,
-#'    codon abundances will be converted to codon bias scores, such that the sum
-#'    of scores for each amino acid sum to 1. Default = FALSE.
 #' @param trans Logical; if true, a Box-Cox transformation will be applied to
 #'    the data. Default = FALSE.
 #' @param propTrain Numeric, proportion of the reference database to use for
@@ -60,7 +56,7 @@ NULL
 #'
 #' @examples
 #'     LDA_tmp <- LDA(
-#'         codonFreq_object, exclude = exclCod, rank = "Phylum", trans = FALSE,
+#'         exclude = exclCod, rank = "Phylum", trans = FALSE,
 #'         propTrain = 1, corCut = 0.95, minlen = 600
 #'     )
 #'     names(LDA_tmp)
@@ -69,21 +65,13 @@ NULL
 #' @rdname LDA
 #'
 #' @export
-setMethod("LDA",
-    signature(cFobj = "codonFreq"),
-    function(cFobj, exclude, minlen, norm, trans, propTrain, rank, corCut) {
-        if (isTRUE(norm)) cFobj <- normalise(cFobj)
-        seqidx <- 1:nrow(cFobj@freq)
+setMethod("LDA", "data.frame",
+    function(exclude, minlen, trans, propTrain, rank, corCut) {
         if (length(exclude) > 0) {
-            keepcF <- which(!(colnames(cFobj@freq) %in% exclude))
-            cFobj <- cFobj[seqidx, keepcF]
             keepRef <- which(!(colnames(gbnorm) %in% exclude))
             gbnorm <- gbnorm[, keepRef]
         }
         if (minlen > 0) {
-            codidx <- 1:ncol(cFobj@freq)
-            keepSeq <- which(cFobj@ncod > minlen)
-            cFobj <- cFobj[keepSeq, codidx]
             gbnorm <- subset(gbnorm, X..Codons >= minlen)
         }
         if (trans == TRUE) gbnorm <- .boxcox(gbnorm, 1:6)

@@ -20,7 +20,8 @@ Imports:
     RColorBrewer,
     reshape2,
     scales,
-    ggbiplot
+    ggbiplot,
+    factoextra
 RoxygenNote: 6.1.1
 Collate: 
     'AllClasses.R'
