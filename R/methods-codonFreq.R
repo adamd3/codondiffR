@@ -156,6 +156,8 @@ setMethod("show", "codonFreq", function(object) {
 #' @param suppress_x_txt Logical, suppress x axis labels? Default = FALSE.
 #' @param suppress_y_title Logical, suppress y axis title? Default = FALSE.
 #' @param label Character, optional label to add to the plotting area.
+#' @param highlight Character (optional) codons in this vector will be
+#'    highlighted.
 #'
 #' @return A \code{ggplot} object.
 #'
@@ -165,7 +167,7 @@ setMethod(
     "codonFreq",
     function(
         object, fname, units, width, height, dpi, groups, ptype, order,
-        colour, suppress_x_txt, suppress_y_title, label
+        colour, suppress_x_txt, suppress_y_title, label, highlight
     ) {
         sc <- length(object@seqID)
         cdf <- as.data.frame(object@freq)
@@ -232,7 +234,6 @@ setMethod(
                 theme_bw() +
                 # coord_flip() +
                 theme(
-                    axis.text.x = xtxt,
                     axis.title.x = element_blank(),
                     axis.title.y = ytit,
                     axis.text.y = element_text(colour = "black", size=cc1*1.2),
@@ -244,6 +245,28 @@ setMethod(
                     y = max(codon_melt$value)-0.001, size = 6,
                     hjust = 1
                 )
+            }
+            if (!is.null(highlight)) {
+                highlight_idx <- which(
+                    levels(codon_melt$variable) %in% highlight
+                )
+                fontFace <- rep("plain", nlevels(codon_melt$variable))
+                fontFace[highlight_idx] <- "bold"
+                fontCols <- rep("black", nlevels(codon_melt$variable))
+                fontCols[highlight_idx] <- "red"
+                print(highlight_idx)
+                print(fontFace)
+                print(levels((codon_melt$variable)))
+                p1 <- p1 + theme(
+                    axis.text.x = element_text(
+                        colour = fontCols, size=cc1*1.2,
+                        face = fontFace,
+                        angle = 90, hjust = 0.1, vjust = 0.5,
+                        margin = margin(10,0,0,0)
+                    )
+                )
+            } else {
+                p1 <- p1 + theme(axis.text.x = xtxt)
             }
         } else if (length(groups) == sc) {
             cdf <- cbind(cdf, groups)
@@ -380,15 +403,15 @@ setMethod(
             ytxt = element_blank()
         } else {
             ytxt = element_text(
-                colour = "black", size=cc1*1.2,
-                margin = margin(0,10,0,0)
+                colour = "black", size=cc1,
+                margin = margin(0,5,0,0)
             )
         }
         if (isTRUE(suppress_y_title)) {
             ytit = element_blank()
         } else {
             ytit = element_text(
-                margin = margin(0,10,0,0), size=cc1*1.2
+                margin = margin(0,5,0,0), size=cc1
             )
         }
         if (length(groups) == sc) {
@@ -426,12 +449,12 @@ setMethod(
             theme_bw() +
             ylim(y1) +
             theme(
-                legend.text = element_text(size = cc1*1.2),
-                text = element_text(size=cc1*1.2),
+                legend.text = element_text(size = cc1),
+                text = element_text(size=cc1),
                 axis.text.x = element_text(
-                    colour = "black", size=cc1*1.2,
+                    colour = "black", size=cc1,
                     # angle = 90, hjust = 0.1, vjust = 0.5
-                    margin = margin(10,0,0,0)
+                    margin = margin(5,0,0,0)
                 ),
                 axis.title.x = element_blank(),
                 axis.title.y = ytit,
@@ -441,7 +464,7 @@ setMethod(
         if (!is.null(label)) {
             p1 <- p1 + annotate(
                 "text", label = label, x = length(keepCod)+0.5,
-                y = y1[2]-0.001, size = 6,
+                y = y1[2]-0.01, size = 4.5,
                 hjust = 1
             )
         }
