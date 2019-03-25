@@ -12,7 +12,6 @@ NULL
 #' Perform PCA on codon usage in a reference
 #'    database and sequences of unknown taxonomic affinity.
 #'
-#' @param dat data.frame from which principal components will be extracted
 #' @param exclude A character vector of codons to be excluded from comparisons.
 #' @param minlen Numeric, the minimum length of sequence (in codons) to be
 #'    included in the analysis. Default = 500.
@@ -36,9 +35,8 @@ NULL
 #' @rdname PCA
 #'
 #' @export
-setMethod("PCA", "data.frame",
-    function(dat, exclude, minlen, norm, rank, corCut, includeTax) {
-        gbnorm <- dat
+setMethod("PCA", signature = character(),
+    function(exclude, minlen, norm, rank, corCut, includeTax) {
         if (length(exclude) > 0) {
             keepRef <- which(!(colnames(gbnorm) %in% exclude))
             gbnorm <- gbnorm[, keepRef]
@@ -118,7 +116,8 @@ setMethod("PCA", "data.frame",
 #'    Default = FALSE.
 #' @param identifier Character, optional group label to be assigned to sequences
 #'    in the \code{codonFreq} object. If not supplied, each sequence will be
-#'    labelled individually on the plot.
+#'    labelled individually on the plot. Maximum number of unique identifiers
+#'    = 6.
 #' @param includeTax Character, optional vector of taxa (at the specified rank)
 #'    to be included in the PCA. If not supplied, all taxa will be used.
 #'
@@ -156,10 +155,14 @@ setMethod("predict_PCA",
         )
         cFdat <- cbind(cFobj@seqID, as.data.frame(cFobj@freq))
         colnames(cFdat)[1] <- colnames(gbnorm)[1] <- "Taxon"
-        if (is.na(identifier)) {
-            cFdat[,1] <-  as.factor(str_sub(cFdat[,1], 1, 20))
+        if (is.null(identifier)) {
+            cFdat[,1] <- as.factor(str_sub(cFdat[,1], 1, 20))
         } else {
-            cFdat[,1] <- as.factor(identifier)
+            if (length(unique(identifier)) > 6) {
+                stop("Maximum number of unique values in `identifier` is 6.")
+            } else {
+                cFdat[,1] <- as.factor(identifier)
+            }
         }
         ## remove taxa in includeTax, if supplied
         if (!is.null(includeTax)) {
@@ -177,6 +180,7 @@ setMethod("predict_PCA",
         cc1 <- 12
         brewer_pallette <- c(brewer.pal(9, "Set1"), "black")
         brewer_pallette2 <- brewer_pallette[c(1:4,7:9)] ##exclude yellow
+        brewer_greys <- brewer.pal(9, "Greys")[3:8]
         ngp <- length(includeTax)
         if (isTRUE(plot)) {
             p1 <- ggbiplot(
@@ -185,12 +189,18 @@ setMethod("predict_PCA",
                     ) +
                     scale_colour_manual(
                         "Group",
-                        values = c(brewer_pallette[1:ngp], brewer_pallette[5]),
+                        values = c(
+                            brewer_pallette2[1:ngp],
+                            brewer_greys[1:length(unique(identifier))+1]
+                        ),
                         guide=FALSE
                     ) +
                     scale_fill_manual(
                         "Group",
-                        values = c(brewer_pallette2[1:ngp], brewer_pallette[5])
+                        values = c(
+                            brewer_pallette2[1:ngp],
+                            brewer_greys[1:length(unique(identifier))+1]
+                        )
                     ) +
                     scale_shape_manual(values = c(rep(16, ngp), 17)) +
                     theme_bw() +

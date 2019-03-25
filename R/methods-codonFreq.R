@@ -398,7 +398,7 @@ setMethod(
         }
         cdf$Taxon <- object@seqID
         brewer_pallette1 <- brewer.pal(9,"Set1")
-        cc1 <- 12
+        cc1 <- 10
         if (isTRUE(suppress_y_txt)) {
             ytxt = element_blank()
         } else {
@@ -542,11 +542,14 @@ setMethod(
                 margin = margin(0,10,0,0), size=cc1*1.2
             )
         }
-        if (length(groups) == sc) {
+        if (is.null(groups)) {
+            stop(
+                "groups` vector must be either length 1 or same length as
+                codonFreq object"
+            )
+        } else {
             cdf <- cbind(cdf, groups)
             cdf$groups <- factor(cdf$groups, levels = sort(unique(groups)))
-        } else {
-            stop("`groups` vector must be same length as codonFreq object")
         }
         if (is.null(colours)) {
             cols <- brewer_pallette1[1:nlevels(cdf$groups)]

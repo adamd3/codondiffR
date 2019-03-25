@@ -337,7 +337,7 @@ setMethod("MCUFD_enrich",
                     xlab("Taxon") +
                     ylab(paste0("Fold enrichment in top ", n, " taxa")),
                 "heatmap" = ggplot(
-                    resMelt, aes(x = seqid, y = Taxon, fill = value)
+                    resMelt, aes(x = Taxon, y = seqid, fill = value)
                     ) +
                     geom_tile(colour = "black") +
                     scale_fill_gradient2(
@@ -346,17 +346,18 @@ setMethod("MCUFD_enrich",
                         mid = "white", high = heatpal[2],
                         midpoint = 0, limits = heatlim
                     ) +
-                    scale_x_discrete(
+                    scale_y_discrete(
                         name = "Sequence",
                         labels = str_sub(names(cFres), 1, 20)
                     ) +
+                    labs(x = rank) +
                     theme_bw() +
                     theme(
                         text = element_text(size = cc1),
                         # panel.grid.major = element_blank(),
                         # panel.grid.minor = element_blank(),
                         axis.text.x = element_text(
-                            angle = 45, hjust = 1,
+                            angle = 45, hjust = 1, size = cc1*1.5,
                             #hjust = -0.5, #vjust = 0.5,
                             margin = margin(2,0,0,0)
                         ),
