@@ -20,6 +20,6 @@ Reads a fasta-format file containing one or more protein-coding
     DNA sequences.
 }
 \examples{
-    readSeq(file = "../inst/extdata/example.fna")
+    mySeq <- readSeq(file = "example.fasta")
 
 }

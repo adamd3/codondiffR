@@ -379,7 +379,7 @@ setMethod(
 #'
 #' @return A \code{ggplot} object.
 #'
-#' @expor
+#' @export
 setMethod(
     "biasPlot",
     "codonFreq",
@@ -514,7 +514,7 @@ setMethod(
 #'
 #' @return A \code{ggplot} object.
 #'
-#' @expor
+#' @export
 setMethod(
     "gcPlot",
     "codonFreq",

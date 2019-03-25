@@ -4,35 +4,58 @@
 \name{LDA}
 \alias{LDA}
 \alias{bootstrap_LDA}
+\alias{predict_LDA}
 \title{Discriminant analysis of codon usage by taxon}
 \usage{
-LDA(cFobj, exclude = character(length = 0), minlen = 600,
-  norm = FALSE, trans = FALSE, propTrain = 0.8, rank = "Phylum",
-  corCut = 0.9)
+LDA(exclude = character(length = 0), minlen = 600, trans = FALSE,
+  propTrain = 1, rank = "Phylum", corCut = 0.9)
 
 bootstrap_LDA(rep = 100, trans = FALSE, propTrain = 0.8,
   rank = "Phylum", exclude = character(length = 0), minlen = 600,
-  corCut = 0.9)
+  corCut = 0.9, norm = FALSE)
 
-\S4method{LDA}{codonFreq}(cFobj, exclude = character(length = 0),
-  minlen = 600, norm = FALSE, trans = FALSE, propTrain = 0.8,
-  rank = "Phylum", corCut = 0.9)
+predict_LDA(cFobj, ldaObj, rank = "Phylum", minlen = 600,
+  fname = NA_character_, units = "in", width = 10, height = 7,
+  dpi = 600, norm = FALSE, plot = FALSE,
+  identifier = NA_character_)
+
+\S4method{LDA}{data.frame}(exclude = character(length = 0),
+  minlen = 600, trans = FALSE, propTrain = 1, rank = "Phylum",
+  corCut = 0.9)
 
 \S4method{bootstrap_LDA}{numeric}(rep = 100, trans = FALSE,
   propTrain = 0.8, rank = "Phylum", exclude = character(length = 0),
-  minlen = 600, corCut = 0.9)
+  minlen = 600, corCut = 0.9, norm = FALSE)
 }
 \arguments{
-\item{cFobj}{An object of class \code{codonFreq}.}
-
 \item{exclude}{A character vector of codons to be excluded from comparisons.}
 
 \item{minlen}{Numeric, the minimum length of sequence (in codons) to be
 included in the analysis. Default = 500.}
 
-\item{norm}{Logical, should the codon abundances be normalised? If TRUE, a
-normalisation step will be performed, such that the proportions for each
-codon sum to 1. Default = FALSE.}
+\item{trans}{Logical; if true, a Box-Cox transformation will be applied to
+the data. Default = FALSE.}
+
+\item{propTrain}{Numeric, proportion of the reference database to use for
+the LDA training set (must be in the range [0,1]). Default = 1.}
+
+\item{rank}{Character, taxonomic rank to be used for categorisation. Options
+are "Domain", "Kingdom", and "Phylum". Default = "Phylum".}
+
+\item{corCut}{Numeric, correlation cutoff used for dropping codons that
+exhibit collinearity. Default = 0.9.}
+
+\item{rep}{Numeric, number of bootstrap replicates to perform (default =
+100).}
+
+\item{norm}{Logical, should the codon abundances be normalised? If TRUE,
+codon abundances will be converted to codon bias scores, such that the sum
+of scores for each amino acid sum to 1. Default = FALSE.}
+
+\item{exclude}{A character vector of codons to be excluded from comparisons.}
+
+\item{minlen}{Numeric, the minimum length of sequence (in codons) to be
+included in the analysis. Default = 500.}
 
 \item{trans}{Logical; if true, a Box-Cox transformation will be applied to
 the data. Default = FALSE.}
@@ -45,27 +68,35 @@ are "Domain", "Kingdom", and "Phylum". Default = "Phylum".}
 
 \item{corCut}{Numeric, correlation cutoff used for dropping codons that
 exhibit collinearity. Default = 0.9.}
-
-\item{rep}{Numeric, number of bootstrap replicates to perform (default =
-100).}
-
-\item{propTrain}{Numeric, proportion of the reference database to use for
-the LDA training set (must be in the range [0,1]). Default = 0.8.}
-
-\item{rank}{Character, taxonomic rank to be used for categorisation. Options
-are "Domain", "Kingdom", and "Phylum". Default = "Phylum".}
-
-\item{corCut}{Numeric, correlation cutoff used for dropping codons that
-exhibit collinearity. Default = 0.9.}
 }
 \value{
-x
+An object of class \code{lda}, with the following components:
 
-A named list of length 3. The elements are "Codons" (the codons used
-   for model construction, aftering the filtering criteria have been
-   applied), "Taxa" (taxa used for model construction/testing), and
-   "Accuracy" (the proportion of accurate classifications using the test
-   subset of the data).
+"prior": the prior probabilities used (determined from training set).
+
+"means": the group means.
+
+"scaling": a matrix which transforms observations to discriminant
+    functions, normalized so that within groups covariance matrix is
+    spherical.
+
+"svd": the singular values, which give the ratio of the between- and
+    within-group standard deviations on the linear discriminant variables.
+    Their squares are the canonical F-statistics.
+
+"N": The number of observations used.
+
+"call": The (matched) function call to MASS:lda.
+
+A named list with the following components:
+
+"codons": the codons used for model construction, aftering filtering
+   criteria have been applied
+
+"taxa": taxa used for model construction/testing
+
+"accuracy": the proportion of accurate classifications using the test
+   subset of the data
 }
 \description{
 Perform linear discriminant analysis (LDA) on codon usage in a reference
@@ -77,12 +108,16 @@ Perform random sampling using different subsets of the reference database
    to assess the impact on model accuracy.
 }
 \examples{
-## To be added
+    LDA_tmp <- LDA(
+        exclude = exclCod, rank = "Phylum", trans = FALSE,
+        propTrain = 1, corCut = 0.95, minlen = 600
+    )
+    names(LDA_tmp)
 
    exclCod <- c("ATT", "TGT")
    boot <- bootstrap_LDA(
-       rep = 1, propTrain = 0.9, trans = FALSE, rank = "Phylum",
-       exclude = exclCod, minlen = 600, corCut = 0.9
+       rep = 100, propTrain = 0.8, trans = FALSE, rank = "Phylum",
+       exclude = exclCod, minlen = 600, corCut = 0.95
    )
    names(boot)
    mean(boot$Accuracy)

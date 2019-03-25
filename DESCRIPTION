@@ -29,4 +29,5 @@ Collate:
     'methods-codonFreq.R'
     'LDA.R'
     'MCUFD.R'
+    'PCA.R'
     'codondiffR.R'
