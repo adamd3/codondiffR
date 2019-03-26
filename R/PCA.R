@@ -230,6 +230,6 @@ setMethod("predict_PCA",
                 dpi = 300
             )
         }
-        invisible(pred)
+        invisible(p1)
     }
 )
