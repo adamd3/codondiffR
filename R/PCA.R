@@ -129,7 +129,8 @@ setMethod("PCA", signature = character(),
 #'        minlen = 600, fname = "PCA_tmp2", height = 5, width = 7
 #'    )
 #'
-#' @rdname plots
+#' @name predict_PCA
+#' @rdname predict_PCA
 #'
 #' @export
 setMethod("predict_PCA",
