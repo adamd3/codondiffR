@@ -23,7 +23,7 @@
   units = "in", width = 10, height = 7, dpi = 600, groups = NULL,
   aa = NULL, norm = FALSE, label = NULL, colours = NULL,
   suppress_y_txt = FALSE, suppress_y_title = FALSE, legend = TRUE,
-  xlim = NULL, outtab = NULL)
+  xlim = NULL, outtab = NULL, save = FALSE)
 }
 \arguments{
 \item{object}{A \code{codonFreq} object.}
@@ -86,6 +86,8 @@ will be chosen based on the data).}
 
 \item{outtab}{Character (optional); name of file to which GC3 data will be
 saved. Format is tab-delimited.}
+
+\item{save}{Logical, save the plot to file? Default = FALSE.}
 
 \item{object}{A \code{codonFreq} object.}
 

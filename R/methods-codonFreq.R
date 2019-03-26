@@ -511,6 +511,7 @@ setMethod(
 #'    will be chosen based on the data).
 #' @param outtab Character (optional); name of file to which GC3 data will be
 #'     saved. Format is tab-delimited.
+#' @param save Logical, save the plot to file? Default = FALSE.
 #'
 #' @return A \code{ggplot} object.
 #'
@@ -520,7 +521,7 @@ setMethod(
     "codonFreq",
     function(
         object, fname, units, width, height, dpi, groups, aa, norm, label,
-        colours, suppress_y_txt, suppress_y_title, legend, xlim, outtab
+        colours, suppress_y_txt, suppress_y_title, legend, xlim, outtab, save
     ) {
         sc <- length(object@seqID)
         cdf <- as.data.frame(object@freq)
@@ -619,15 +620,17 @@ setMethod(
                 axis.text.y = element_text(colour = "black", size=cc1),
                 legend.position = "right"
             )
-        ggsave(
-            p1,
-            file = paste0(fname, ".png"),
-            device = "png",
-            units = units,
-            width = width,
-            height = height,
-            dpi = dpi
-        )
+        if (isTRUE(save)) {
+            ggsave(
+                p1,
+                file = paste0(fname, ".png"),
+                device = "png",
+                units = units,
+                width = width,
+                height = height,
+                dpi = dpi
+            )
+        }
         invisible(p1)
 })
 

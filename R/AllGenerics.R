@@ -65,7 +65,7 @@ setGeneric(
         height = 7, dpi = 600, groups = NULL, aa = NULL, norm = FALSE,
         label = NULL, colours = NULL, suppress_y_txt = FALSE,
         suppress_y_title = FALSE, legend = TRUE, xlim = NULL,
-        outtab = NULL
+        outtab = NULL, save = FALSE
     ) standardGeneric("gcPlot")
 )
 
