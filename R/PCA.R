@@ -183,44 +183,44 @@ setMethod("predict_PCA",
         brewer_pallette2 <- brewer_pallette[c(1:4,7:9)] ##exclude yellow
         brewer_greys <- brewer.pal(9, "Greys")[3:8]
         ngp <- length(includeTax)
-        if (isTRUE(save)) {
-            p1 <- ggbiplot(
-                    pcaObj, groups = gbnorm[,1], ellipse = TRUE, circle = TRUE,
-                    var.axes = FALSE, alpha = 0
-                    ) +
-                    scale_colour_manual(
-                        "Group",
-                        values = c(
-                            brewer_pallette2[1:ngp],
-                            brewer_greys[1:length(unique(identifier))+1]
-                        ),
-                        guide=FALSE
-                    ) +
-                    scale_fill_manual(
-                        "Group",
-                        values = c(
-                            brewer_pallette2[1:ngp],
-                            brewer_greys[1:length(unique(identifier))+1]
-                        )
-                    ) +
-                    scale_shape_manual(values = c(rep(16, ngp), 17)) +
-                    theme_bw() +
-                    theme(
-                      text = element_text(size = cc1),
-                      axis.text.x = element_text(colour = "black", size=cc1),
-                      axis.text.y = element_text(colour = "black", size=cc1)
-                  ) +
-                  geom_point(
-                      size = 3, shape = 21, aes(fill = groups)
-                  )
-            ## add predictions
-            p1$data <- rbind(p1$data,
-                data.frame(
-                    xvar = pred[, "PC1"],
-                    yvar = pred[, "PC2"],
-                    groups = cFdat[,1]
-                )
+        p1 <- ggbiplot(
+                pcaObj, groups = gbnorm[,1], ellipse = TRUE, circle = TRUE,
+                var.axes = FALSE, alpha = 0
+                ) +
+                scale_colour_manual(
+                    "Group",
+                    values = c(
+                        brewer_pallette2[1:ngp],
+                        brewer_greys[1:length(unique(identifier))+1]
+                    ),
+                    guide=FALSE
+                ) +
+                scale_fill_manual(
+                    "Group",
+                    values = c(
+                        brewer_pallette2[1:ngp],
+                        brewer_greys[1:length(unique(identifier))+1]
+                    )
+                ) +
+                scale_shape_manual(values = c(rep(16, ngp), 17)) +
+                theme_bw() +
+                theme(
+                  text = element_text(size = cc1),
+                  axis.text.x = element_text(colour = "black", size=cc1),
+                  axis.text.y = element_text(colour = "black", size=cc1)
+              ) +
+              geom_point(
+                  size = 3, shape = 21, aes(fill = groups)
+              )
+        ## add predictions
+        p1$data <- rbind(p1$data,
+            data.frame(
+                xvar = pred[, "PC1"],
+                yvar = pred[, "PC2"],
+                groups = cFdat[,1]
             )
+        )
+        if (isTRUE(save)) {
             ggsave(
                 p1,
                 file = paste0(fname, ".png"),
@@ -231,6 +231,6 @@ setMethod("predict_PCA",
                 dpi = 300
             )
         }
-        invisible(p1)
+        p1
     }
 )

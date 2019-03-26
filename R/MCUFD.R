@@ -250,7 +250,7 @@ setMethod("MCUFD_plot",
 #' @param rank Character, taxonomic rank to be used for categorisation of the
 #'    CUFD hit sequences. Options are "Domain", "Kingdom", and "Phylum".
 #'    Default = "Phylum".
-#' @param plot Logical, should the enrichment results be plotted?
+#' @param save Logical, should the enrichment plot be saved to file?
 #'    Default = FALSE.
 #' @param pthresh Numeric, adjusted p-value threshold to be used for subsetting
 #'    the data if plot == TRUE. Default = NA.
@@ -265,7 +265,7 @@ setMethod("MCUFD_plot",
 #' @param outtab Character (optional); name of file to which enrichment test
 #'     results will be saved. Format is tab-delimited.
 #'
-#' @return A list of data frames containing enrichment results.
+#' @return A \code{ggplot} object.
 #'
 #' @examples
 #'    enrich_tmp <- MCUFD_enrich(
@@ -277,7 +277,7 @@ setMethod("MCUFD_plot",
 setMethod("MCUFD_enrich",
     signature(cFres = "list"),
     function(
-        cFres, n, rank, plot, pthresh, fname,
+        cFres, n, rank, save, pthresh, fname,
         units, width, height, dpi, ptype, outtab
     ) {
         resList <- vector("list", length(cFres))
@@ -372,16 +372,18 @@ setMethod("MCUFD_enrich",
                     ) +
                     ylab(rank)
             )
-            ggsave(
-                plt,
-                file = paste0(fname, ".png"),
-                device = "png",
-                units = units,
-                width = width,
-                height = height,
-                dpi = dpi
-            )
+            if (isTRUE(save)) {
+                ggsave(
+                    plt,
+                    file = paste0(fname, ".png"),
+                    device = "png",
+                    units = units,
+                    width = width,
+                    height = height,
+                    dpi = dpi
+                )
+            }
         }
-        resList
+        plt
     }
 )

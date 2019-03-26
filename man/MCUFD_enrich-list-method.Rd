@@ -6,7 +6,7 @@
 \title{MCUFD enrichment testing}
 \usage{
 \S4method{MCUFD_enrich}{list}(cFres, n = NA_real_, rank = "Phylum",
-  plot = FALSE, pthresh = NA_real_, fname = NA_character_,
+  save = FALSE, pthresh = NA_real_, fname = NA_character_,
   units = "in", width = 10, height = 7, dpi = 600,
   ptype = "heatmap", outtab = NULL)
 }
@@ -20,7 +20,7 @@ per input sequence. Default = 100.}
 CUFD hit sequences. Options are "Domain", "Kingdom", and "Phylum".
 Default = "Phylum".}
 
-\item{plot}{Logical, should the enrichment results be plotted?
+\item{save}{Logical, should the enrichment plot be saved to file?
 Default = FALSE.}
 
 \item{pthresh}{Numeric, adjusted p-value threshold to be used for subsetting
@@ -44,7 +44,7 @@ Options are "in" (default), "cm", and "mm".}
 results will be saved. Format is tab-delimited.}
 }
 \value{
-A list of data frames containing enrichment results.
+A \code{ggplot} object.
 }
 \description{
 Compare taxon proportions in the top n hits with those in the full set of

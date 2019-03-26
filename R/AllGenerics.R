@@ -103,7 +103,7 @@ setGeneric(
     "MCUFD_enrich",
     function(
         cFres, n = NA_real_, rank = "Phylum",
-        plot = FALSE, pthresh = NA_real_, fname = NA_character_,
+        save = FALSE, pthresh = NA_real_, fname = NA_character_,
         units = "in", width = 10, height = 7, dpi = 600,
         ptype = "heatmap", outtab = NULL
     ) standardGeneric("MCUFD_enrich")

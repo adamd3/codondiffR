@@ -10,7 +10,7 @@
 MCUFD(cFobj, exclude = character(length = 0), minlen = 600,
   norm = FALSE)
 
-MCUFD_enrich(cFres, n = NA_real_, rank = "Phylum", plot = FALSE,
+MCUFD_enrich(cFres, n = NA_real_, rank = "Phylum", save = FALSE,
   pthresh = NA_real_, fname = NA_character_, units = "in",
   width = 10, height = 7, dpi = 600, ptype = "heatmap",
   outtab = NULL)
