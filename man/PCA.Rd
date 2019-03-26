@@ -3,16 +3,10 @@
 \docType{methods}
 \name{PCA}
 \alias{PCA}
-\alias{predict_PCA}
 \title{PCA of codon usage by taxon}
 \usage{
 PCA(exclude = character(length = 0), minlen = 600, norm = FALSE,
   rank = "Phylum", corCut = 0.9, includeTax = NULL)
-
-predict_PCA(cFobj, pcaObj, rank = "Phylum", minlen = 600,
-  fname = NA_character_, units = "in", width = 10, height = 7,
-  dpi = 600, norm = FALSE, plot = FALSE, identifier = NULL,
-  includeTax = NULL)
 
 \S4method{PCA}{ANY}(exclude = character(length = 0), minlen = 600,
   norm = FALSE, rank = "Phylum", corCut = 0.9, includeTax = NULL)
