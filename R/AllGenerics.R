@@ -136,7 +136,7 @@ setGeneric(
 )
 
 
-#' @rdname PCA
+#' @rdname predict_PCA
 #'
 #' @export
 setGeneric(
