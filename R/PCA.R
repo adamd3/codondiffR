@@ -112,7 +112,7 @@ setMethod("PCA", signature = character(),
 #' @param norm Logical, should the codon abundances be normalised? If TRUE,
 #'    codon abundances will be converted to codon bias scores, such that the sum
 #'    of scores for each amino acid sum to 1. Default = FALSE.
-#' @param plot Logical, should the enrichment results be plotted?
+#' @param save Logical, should the enrichment results plot be saved to a file?
 #'    Default = FALSE.
 #' @param identifier Character, optional group label to be assigned to sequences
 #'    in the \code{codonFreq} object. If not supplied, each sequence will be
@@ -125,7 +125,7 @@ setMethod("PCA", signature = character(),
 #'
 #' @examples
 #'    predPCA <- predict_PCA(
-#'        tmp2norm, PCA_tmp2, rank = "Phylum", plot = TRUE,
+#'        tmp2norm, PCA_tmp2, rank = "Phylum", save = TRUE,
 #'        minlen = 600, fname = "PCA_tmp2", height = 5, width = 7
 #'    )
 #'
@@ -137,7 +137,7 @@ setMethod("predict_PCA",
     signature(cFobj = "codonFreq"),
     function(
         cFobj, pcaObj, rank, minlen,
-        fname, units, width, height, dpi, norm, plot, identifier
+        fname, units, width, height, dpi, norm, save, identifier
     ) {
         if (isTRUE(norm)) cFobj <- normalise(cFobj)
         if (minlen > 0) {
@@ -183,7 +183,7 @@ setMethod("predict_PCA",
         brewer_pallette2 <- brewer_pallette[c(1:4,7:9)] ##exclude yellow
         brewer_greys <- brewer.pal(9, "Greys")[3:8]
         ngp <- length(includeTax)
-        if (isTRUE(plot)) {
+        if (isTRUE(save)) {
             p1 <- ggbiplot(
                     pcaObj, groups = gbnorm[,1], ellipse = TRUE, circle = TRUE,
                     var.axes = FALSE, alpha = 0
