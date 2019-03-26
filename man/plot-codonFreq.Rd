@@ -11,7 +11,7 @@
   width = 10, height = 7, dpi = 600, groups = NULL,
   ptype = "boxplot", order = "median", colour = 1,
   suppress_x_txt = FALSE, suppress_y_title = FALSE, label = NULL,
-  highlight = NULL)
+  highlight = NULL, save = FALSE)
 
 \S4method{biasPlot}{codonFreq}(object, fname = NA_character_,
   units = "in", width = 10, height = 7, dpi = 600, groups = NULL,
@@ -64,6 +64,9 @@ non-grouped plots. Default = 1 (red).}
 \item{highlight}{Character (optional) codons in this vector will be
 highlighted.}
 
+\item{save}{Logical, should the plot be saved to file? Default
+= FALSE.}
+
 \item{aa}{Character, amino acid for which codon bias plot will be made
 (must be specified using single letter IUPAC code).}
 
@@ -87,8 +90,6 @@ will be chosen based on the data).}
 \item{outtab}{Character (optional); name of file to which GC3 data will be
 saved. Format is tab-delimited.}
 
-\item{save}{Logical, save the plot to file? Default = FALSE.}
-
 \item{object}{A \code{codonFreq} object.}
 
 \item{fname}{Character, name of figure generated.}
@@ -144,6 +145,8 @@ palette in the RColorBrewer package. By default, the Set1 order is used.}
 \item{suppress_y_title}{Logical, suppress y axis title? Default = FALSE.}
 
 \item{legend}{Logical, plot a legend? Default = TRUE.}
+
+\item{save}{Logical, save the plot to file? Default = FALSE.}
 }
 \value{
 A \code{ggplot} object.

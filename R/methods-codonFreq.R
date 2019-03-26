@@ -158,6 +158,8 @@ setMethod("show", "codonFreq", function(object) {
 #' @param label Character, optional label to add to the plotting area.
 #' @param highlight Character (optional) codons in this vector will be
 #'    highlighted.
+#' @param save Logical, should the plot be saved to file? Default
+#'    = FALSE.
 #'
 #' @return A \code{ggplot} object.
 #'
@@ -167,7 +169,7 @@ setMethod(
     "codonFreq",
     function(
         object, fname, units, width, height, dpi, groups, ptype, order,
-        colour, suppress_x_txt, suppress_y_title, label, highlight
+        colour, suppress_x_txt, suppress_y_title, label, highlight, save
     ) {
         sc <- length(object@seqID)
         cdf <- as.data.frame(object@freq)
@@ -335,15 +337,17 @@ setMethod(
         } else {
             stop("`groups` vector must be same length as codonFreq object")
         }
-        ggsave(
-            p1,
-            file = paste0(fname, ".png"),
-            device = "png",
-            units = units,
-            width = width,
-            height = height,
-            dpi = dpi
-        )
+        if (isTRUE(save)) {
+            ggsave(
+                p1,
+                file = paste0(fname, ".png"),
+                device = "png",
+                units = units,
+                width = width,
+                height = height,
+                dpi = dpi
+            )
+        }
         invisible(p1)
 })
 
