@@ -46,7 +46,7 @@ setGeneric(
         order = "median", colour = 1, suppress_x_txt = FALSE,
         suppress_y_title = FALSE, label = NULL, highlight = NULL,
         save = FALSE
-    ) standardGeneric("plot")
+    ) standardGeneric("codonPlot")
 )
 
 setGeneric(

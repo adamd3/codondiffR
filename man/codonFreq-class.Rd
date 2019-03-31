@@ -9,7 +9,7 @@
 \alias{nseq}
 \alias{seqID}
 \alias{seqlen}
-\alias{plot}
+\alias{codonPlot}
 \alias{normalise}
 \alias{getFreqs,codonFreq-method}
 \alias{nseq,codonFreq-method}
@@ -27,7 +27,7 @@ seqID(object)
 
 seqlen(object)
 
-plot(object, fname = NA_character_, units = "in", width = 10,
+codonPlot(object, fname = NA_character_, units = "in", width = 10,
   height = 7, dpi = 600, groups = NULL, ptype = "boxplot",
   order = "median", colour = 1, suppress_x_txt = FALSE,
   suppress_y_title = FALSE, label = NULL, highlight = NULL,
