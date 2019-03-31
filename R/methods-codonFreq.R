@@ -10,9 +10,7 @@
 #' @import stringr
 #' @import scales
 #' @import ggbiplot
-#' @importFrom Biostrings trinucleotideFrequency
-#' @importFrom Biostrings readDNAStringSet
-#' @importFrom Biostrings width
+#' @import Biostrings
 NULL
 
 

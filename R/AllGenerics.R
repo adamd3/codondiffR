@@ -116,7 +116,8 @@ setGeneric(
     "MCUFD_plot",
     function(
         cFres, type = "bar", n = NA_real_, rank = "Phylum",
-        fname = NA_character_, units = "in", width = 10, height = 7, dpi = 600
+        fname = NA_character_, units = "in", width = 10, height = 7, dpi = 600,
+        save = FALSE
     ) standardGeneric("MCUFD_plot")
 )
 

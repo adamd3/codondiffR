@@ -17,7 +17,7 @@ MCUFD_enrich(cFres, n = NA_real_, rank = "Phylum", save = FALSE,
 
 MCUFD_plot(cFres, type = "bar", n = NA_real_, rank = "Phylum",
   fname = NA_character_, units = "in", width = 10, height = 7,
-  dpi = 600)
+  dpi = 600, save = FALSE)
 
 \S4method{MCUFD}{codonFreq}(cFobj, exclude = character(length = 0),
   minlen = 600, norm = FALSE)

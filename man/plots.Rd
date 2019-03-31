@@ -13,7 +13,7 @@
 
 \S4method{MCUFD_plot}{list}(cFres, type = "bar", n = NA_real_,
   rank = "Phylum", fname = NA_character_, units = "in", width = 10,
-  height = 7, dpi = 600)
+  height = 7, dpi = 600, save = FALSE)
 }
 \arguments{
 \item{cFobj}{An object of class \code{codonFreq}.}
@@ -57,6 +57,8 @@ and "line".}
 \item{n}{Numeric, the number of top-ranked reference taxa to be plotted
 per input sequence. Default = 100.}
 
+\item{save}{Logical, should the figure be saved to file? Default = FALSE.}
+
 \item{rank}{Character, taxonomic rank to be used for categorisation of the
 CUFD hit sequences. Options are "Domain", "Kingdom", and "Phylum".
 Default = "Phylum".}
@@ -92,7 +94,7 @@ Plot the distribution of MCUFD values per taxon
    head(sort(table(predLDA$class), decreasing = TRUE))
 
    MCUFD_plot(
-       cFres, type = "bar", fname = "MCUFD_bar_kingdom", n = 100,
+       cFres, type = "bar", save = TRUE, fname = "MCUFD_bar_kingdom", n = 100,
        rank = "Kingdom"
    )
 

@@ -94,12 +94,13 @@ setMethod("MCUFD",
 #' @param width Numeric, width of the figure (in \code{units}).
 #' @param height Numeric, height of the figure (in \code{units}).
 #' @param dpi Numeric, resolution of the figure (default = 600).
+#' @param save Logical, should the figure be saved to file? Default = FALSE.
 #'
 #' @return A \code{ggplot} object.
 #'
 #' @examples
 #'    MCUFD_plot(
-#'        cFres, type = "bar", fname = "MCUFD_bar_kingdom", n = 100,
+#'        cFres, type = "bar", save = TRUE, fname = "MCUFD_bar_kingdom", n = 100,
 #'        rank = "Kingdom"
 #'    )
 #'
@@ -108,7 +109,7 @@ setMethod("MCUFD",
 #' @export
 setMethod("MCUFD_plot",
     signature(cFres = "list"),
-    function(cFres, type, n, rank, fname, units, width, height, dpi) {
+    function(cFres, type, n, rank, fname, units, width, height, dpi, save) {
         keepCols <- switch(rank,
             "Domain" = c(4, ncol(cFres[[1]])-1, ncol(cFres[[1]])),
             "Kingdom" = c(5,  ncol(cFres[[1]])-1, ncol(cFres[[1]])),
@@ -183,16 +184,18 @@ setMethod("MCUFD_plot",
         } else {
             stop('Plot type must be either "bar" or "histogram".')
         }
-        ggsave(
-            plt,
-            file = paste0(fname, ".png"),
-            device = "png",
-            units = units,
-            width = width,
-            height = height,
-            dpi = dpi
-        )
-        invisible(plt)
+        if (isTRUE(save)) {
+            ggsave(
+                plt,
+                file = paste0(fname, ".png"),
+                device = "png",
+                units = units,
+                width = width,
+                height = height,
+                dpi = dpi
+            )
+        }
+        plt
     }
 )
 
