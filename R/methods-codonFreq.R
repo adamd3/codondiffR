@@ -165,7 +165,7 @@ setMethod("show", "codonFreq", function(object) {
 #'
 #' @export
 setMethod(
-    "plot",
+    "codonPlot",
     "codonFreq",
     function(
         object, fname, units, width, height, dpi, groups, ptype, order,
@@ -380,6 +380,7 @@ setMethod(
 #' @param legend Logical, plot a legend? Default = TRUE.
 #' @param ylim Numeric vector, gives the y-axis limits (if not supplied, they
 #'    will be chosen based on the data).
+#' @param save Logical, plot the plot be saved to file? Default = FALSE.
 #'
 #' @return A \code{ggplot} object.
 #'
@@ -472,15 +473,17 @@ setMethod(
                 hjust = 1
             )
         }
-        ggsave(
-            p1,
-            file = paste0(fname, ".png"),
-            device = "png",
-            units = units,
-            width = width,
-            height = height,
-            dpi = dpi
-        )
+        if (isTRUE(save)) {
+            ggsave(
+                p1,
+                file = paste0(fname, ".png"),
+                device = "png",
+                units = units,
+                width = width,
+                height = height,
+                dpi = dpi
+            )
+        }
         p1
 })
 

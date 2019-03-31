@@ -39,7 +39,7 @@ setGeneric("seqlen", function(object) standardGeneric("seqlen"))
 #'
 #' @export
 setGeneric(
-    "plot",
+    "codonPlot",
     function(
         object, fname = NA_character_, units = "in", width = 10,
         height = 7, dpi = 600, groups = NULL, ptype = "boxplot",
@@ -55,7 +55,7 @@ setGeneric(
         object, fname = NA_character_, units = "in", width = 10,
         height = 7, dpi = 600, groups = NULL, aa = NULL, norm = FALSE,
         label = NULL, colours = NULL, suppress_y_txt = FALSE,
-        suppress_y_title = FALSE, legend = TRUE, ylim = NULL
+        suppress_y_title = FALSE, legend = TRUE, ylim = NULL, save = FALSE
     ) standardGeneric("biasPlot")
 )
 
