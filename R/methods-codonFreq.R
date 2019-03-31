@@ -348,7 +348,7 @@ setMethod(
                 dpi = dpi
             )
         }
-        invisible(p1)
+        p1
 })
 
 
@@ -389,7 +389,7 @@ setMethod(
     "codonFreq",
     function(
         object, fname, units, width, height, dpi, groups, aa, norm, label,
-        colours, suppress_y_txt, suppress_y_title, legend, ylim
+        colours, suppress_y_txt, suppress_y_title, legend, ylim, save
     ) {
         if (isTRUE(norm)) object <- normalise(object)
         sc <- length(object@seqID)
@@ -481,7 +481,7 @@ setMethod(
             height = height,
             dpi = dpi
         )
-        invisible(p1)
+        p1
 })
 
 
@@ -635,7 +635,7 @@ setMethod(
                 dpi = dpi
             )
         }
-        invisible(p1)
+        p1
 })
 
 

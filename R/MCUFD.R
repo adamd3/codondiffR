@@ -284,105 +284,103 @@ setMethod("MCUFD_enrich",
         sapply(seq_along(cFres), function(i) {
             resList[[i]] <<- .enrichTest(cFres[[i]], n, rank)
         })
-        if (isTRUE(plot)) {
-            resMerge <- dplyr::bind_rows(resList, .id = "seqid")
-            if (!is.na(pthresh)) {
-                # resMerge <- subset(resMerge, padj < pthresh)
-                keepTax <- unique(resMerge$Taxon[resMerge$padj < pthresh])
-                resMerge <- subset(resMerge, Taxon %in% keepTax)
-                resMerge$padj <- ifelse(
-                    resMerge$padj < pthresh, resMerge$padj, 0
-                )
-            }
-            if (!is.null(outtab)) {
-                write.table(
-                    resMerge, file = paste0(outtab, ".tsv"),
-                    quote = FALSE, sep = "\t", row.names = FALSE
-                 )
-            }
-            resMelt <- melt(
-                resMerge, id.vars = c("Taxon", "seqid"),
-                measure.vars = "foldEnrich"
+        resMerge <- dplyr::bind_rows(resList, .id = "seqid")
+        if (!is.na(pthresh)) {
+            # resMerge <- subset(resMerge, padj < pthresh)
+            keepTax <- unique(resMerge$Taxon[resMerge$padj < pthresh])
+            resMerge <- subset(resMerge, Taxon %in% keepTax)
+            resMerge$padj <- ifelse(
+                resMerge$padj < pthresh, resMerge$padj, 0
             )
-            subMelt <- melt(
-                resMerge, id.vars = c("Taxon"), measure.vars = "foldEnrich"
+        }
+        if (!is.null(outtab)) {
+            write.table(
+                resMerge, file = paste0(outtab, ".tsv"),
+                quote = FALSE, sep = "\t", row.names = FALSE
+             )
+        }
+        resMelt <- melt(
+            resMerge, id.vars = c("Taxon", "seqid"),
+            measure.vars = "foldEnrich"
+        )
+        subMelt <- melt(
+            resMerge, id.vars = c("Taxon"), measure.vars = "foldEnrich"
+        )
+        resMelt$Taxon <- factor(
+            resMelt$Taxon, levels = rev(levels(factor(resMelt$Taxon)))
+        )
+        resMelt$seqid <- factor(
+            resMelt$seqid, levels = c(1:length(resMelt$seqid))
+        )
+        subMelt$Taxon <- factor(
+            subMelt$Taxon, levels = rev(levels(factor(subMelt$Taxon)))
+        )
+        cc1 <- 12
+        heatpal <- brewer.pal(3, "Set1")[c(3,1)]
+        heatlim <- c(
+            floor(min(resMelt$value)), ceiling(max(resMelt$value))
+        )
+        plt <- switch(ptype,
+            "dotplot" = ggplot(subMelt, aes(x = Taxon, y = value)) +
+                geom_point(
+                    shape = 21, size = 4, fill = "red", alpha = 0.5,
+                    show.legend = FALSE
+                ) +
+                theme_classic() +
+                theme(text = element_text(size = cc1)) +
+                coord_flip() +
+                geom_hline(
+                    yintercept = 0, linetype = "dashed",
+                    color = "grey", size = 1
+                ) +
+                xlab("Taxon") +
+                ylab(paste0("Fold enrichment in top ", n, " taxa")),
+            "heatmap" = ggplot(
+                resMelt, aes(x = Taxon, y = seqid, fill = value)
+                ) +
+                geom_tile(colour = "black") +
+                scale_fill_gradient2(
+                    paste0("Fold enrichment\nin top ", n, " taxa"),
+                    low = heatpal[1],
+                    mid = "white", high = heatpal[2],
+                    midpoint = 0, limits = heatlim
+                ) +
+                scale_y_discrete(
+                    name = "Sequence",
+                    labels = str_sub(names(cFres), 1, 20)
+                ) +
+                labs(x = rank) +
+                theme_bw() +
+                theme(
+                    text = element_text(size = cc1),
+                    # panel.grid.major = element_blank(),
+                    # panel.grid.minor = element_blank(),
+                    axis.text.x = element_text(
+                        angle = 45, hjust = 1, size = cc1*1.5,
+                        #hjust = -0.5, #vjust = 0.5,
+                        margin = margin(2,0,0,0)
+                    ),
+                    axis.text.y = element_text(
+                        size=cc1, margin = margin(0,2,0,0)
+                    ),
+                    axis.title.x = element_text(
+                        colour = "black", #size=cc1,
+                        #hjust = -0.5, #vjust = 0.5,
+                        margin = margin(2,0,0,0)
+                    )
+                ) +
+                ylab(rank)
+        )
+        if (isTRUE(save)) {
+            ggsave(
+                plt,
+                file = paste0(fname, ".png"),
+                device = "png",
+                units = units,
+                width = width,
+                height = height,
+                dpi = dpi
             )
-            resMelt$Taxon <- factor(
-                resMelt$Taxon, levels = rev(levels(factor(resMelt$Taxon)))
-            )
-            resMelt$seqid <- factor(
-                resMelt$seqid, levels = c(1:length(resMelt$seqid))
-            )
-            subMelt$Taxon <- factor(
-                subMelt$Taxon, levels = rev(levels(factor(subMelt$Taxon)))
-            )
-            cc1 <- 12
-            heatpal <- brewer.pal(3, "Set1")[c(3,1)]
-            heatlim <- c(
-                floor(min(resMelt$value)), ceiling(max(resMelt$value))
-            )
-            plt <- switch(ptype,
-                "dotplot" = ggplot(subMelt, aes(x = Taxon, y = value)) +
-                    geom_point(
-                        shape = 21, size = 4, fill = "red", alpha = 0.5,
-                        show.legend = FALSE
-                    ) +
-                    theme_classic() +
-                    theme(text = element_text(size = cc1)) +
-                    coord_flip() +
-                    geom_hline(
-                        yintercept = 0, linetype = "dashed",
-                        color = "grey", size = 1
-                    ) +
-                    xlab("Taxon") +
-                    ylab(paste0("Fold enrichment in top ", n, " taxa")),
-                "heatmap" = ggplot(
-                    resMelt, aes(x = Taxon, y = seqid, fill = value)
-                    ) +
-                    geom_tile(colour = "black") +
-                    scale_fill_gradient2(
-                        paste0("Fold enrichment\nin top ", n, " taxa"),
-                        low = heatpal[1],
-                        mid = "white", high = heatpal[2],
-                        midpoint = 0, limits = heatlim
-                    ) +
-                    scale_y_discrete(
-                        name = "Sequence",
-                        labels = str_sub(names(cFres), 1, 20)
-                    ) +
-                    labs(x = rank) +
-                    theme_bw() +
-                    theme(
-                        text = element_text(size = cc1),
-                        # panel.grid.major = element_blank(),
-                        # panel.grid.minor = element_blank(),
-                        axis.text.x = element_text(
-                            angle = 45, hjust = 1, size = cc1*1.5,
-                            #hjust = -0.5, #vjust = 0.5,
-                            margin = margin(2,0,0,0)
-                        ),
-                        axis.text.y = element_text(
-                            size=cc1, margin = margin(0,2,0,0)
-                        ),
-                        axis.title.x = element_text(
-                            colour = "black", #size=cc1,
-                            #hjust = -0.5, #vjust = 0.5,
-                            margin = margin(2,0,0,0)
-                        )
-                    ) +
-                    ylab(rank)
-            )
-            if (isTRUE(save)) {
-                ggsave(
-                    plt,
-                    file = paste0(fname, ".png"),
-                    device = "png",
-                    units = units,
-                    width = width,
-                    height = height,
-                    dpi = dpi
-                )
-            }
         }
         plt
     }
