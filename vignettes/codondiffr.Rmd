@@ -38,7 +38,7 @@ library(codondiffR)
 
 ## Reading in data
 
-To read in one or more sequences from a fasta-format file, we use the readSeq() function from the `Biostrings` package, as shown below. The DNAStringSet object can then be used to generate a codonFreq object:
+To read in one or more sequences from a fasta-format file, we use the `readSeq()` function from the `Biostrings` package, as shown below. The DNAStringSet object can then be used to generate a codonFreq object:
 
 ```{r read_data}
 virusSet <- readSeq(file = "../inst/extdata/example_viruses.fna")
@@ -78,22 +78,22 @@ virusCF_sub_2 <- virusCF[1:10,codIdx]
 ```
 
 ## Visualise codon frequency and GC3 content
-To plot the relative codon frequencies, call the plot() function on the `codonFreq` object as shown below. Various attributes of the output figure can be specified using the parameters `height`, `width`, `dpi`, and `fname`. See help for `plot.codonFreq()` for more information. If a `groups` vector is supplied, then codon frequencies will be plotted by group. Note that all plotting functions in the package will return a `ggplot` object, which can be used to modify or combine figures.
+To plot the relative codon frequencies, call the `codonPlot()` function on the `codonFreq` object as shown below. Various attributes of the output figure can be specified using the parameters `height`, `width`, `dpi`, and `fname`.  See the function's help page for more information.  If a `groups` vector is supplied, then codon frequencies will be plotted by group. Note that all plotting functions in the package will return a `ggplot` object, which can be used to modify or combine figures.
 
-```{r codon_plots, fig.height = 5, fig.width = 15}
-## Ungrouped
+```{r codon_plots_non_grouped, fig.height = 5, fig.width = 15}
 codonPlot(virusCF)
+```
+For these and all other plots, it is possible to save the plot to file when calling the function, by setting `save = TRUE` when calling `codonPlot` (or any other plot-producing function), and the height, width, file name and dpi of the saved figure can be specified. See the help pages for each function.
 
-## Grouped
+It is also possible to make grouped codon plots as follows:
+```{r codon_plots_grouped, fig.height = 5, fig.width = 15}
 groups <- c(
     rep("Non-mammalian virus", 4),
     rep("Mammalian virus", 10), rep("Non-mammalian virus", 2)
 )
 
 codonPlot(virusCF, groups = groups)
-
 ```
-For these and all other plots, it is possible to save the plot to file when calling the function, by setting `save = TRUE` when calling `codonPlot` (or any other plot-producing function), and the height, width, file name and dpi of the saved figure can be specified. See the help pages for each function.
 
 It is also possible to plot the GC3 content (i.e. proportion of codons with a G or a C residue at the third position) across the sequences. A `groups` vector is required here; and it must be the same length as the number of sequences in the `codonFreq` object.
 ```{r gc_plots, fig.width = 12, fig.height = 5}
@@ -135,7 +135,7 @@ Mean codon usage frequency divergence (MCUFD) between the sequences in the codon
 The results can then be plotted using the `MCUFD_plot` function, and the `type` argument accepts either `bar` (bar plots) or `line` (line plots). Moreover, the phylogenetic rank of interest can be specified using the `rank` parameter, which accepts "Phylum" (default), "Domain", or "Kingdom". The five most common overall levels of this rank will be plotted per sequence.
 
 Enrichment testing allows an assessment of the relative over- or under-representation of specific taxonomic ranks in the top `n` hits. Enrichment plot type is determined by the `ptype` parameter, which accepts either "heatmap" (default) or "dotplot". An optional p-value threshold, based on the results of Fisher's exact test, can also be applied using `pthresh`. The results of the enrichment testing can also be saved in tab-delimited format to a file, via `outtab`.
-```{r mcufd, fig.height = 10, fig.width = 10}
+```{r mcufd_plot, fig.height = 6, fig.width = 7}
 exclCod <- c("TAA", "TAG", "TGA")
 MCUFD_virus <- MCUFD(virusCF_norm, exclude = exclCod, minlen = 600)
 
@@ -150,12 +150,13 @@ table(MCUFD_virus[[1]]$Kingdom[1:100], useNA = "always")
 MCUFD_plot(
     MCUFD_virus, type = "bar", n = 100, rank = "Phylum"
 )
+```
 
+```{r mcufd_enrich, fig.height = 10, fig.width = 13}
 MCUFD_enrich(
     MCUFD_virus, n = 100, rank = "Phylum", ptype = "heatmap",
     pthresh = 0.05
 )
-
 ```
 Note that the MCUFD enrichment values can be saved to file by using the `outtab` parameter - see the help page for the `MCUFD_enrich` function.
 
