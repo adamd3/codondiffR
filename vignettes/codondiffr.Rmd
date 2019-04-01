@@ -1,0 +1,193 @@
+---
+title: "codondiffR"
+author: "Adam Dinan"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+    echo = TRUE, collapse = TRUE,
+    comment = "#>", fig.show = "hold",
+    warning = FALSE, message = FALSE,
+    fig.path = "../inst/figures/"
+)
+```
+
+## Introducing codondiffR
+
+`codondiffR` is an R package that I wrote for the calculation, visualisation, and comparative analysis of codon usage metrics in user-supplied protein-coding nucleotide sequences.
+
+Pre-defined codon usage statistics for reference taxa come from the RefSeq subset of the latest release of the Codon Usage Table Database made by [Athey et al. (2017)](https://www.ncbi.nlm.nih.gov/pubmed/28865429). Mean codon  usage frequency difference (MCUFD) metric is calculated as described in [Stedman et al. (2013)](https://www.ncbi.nlm.nih.gov/pubmed/23308027), and linear discriminant analysis is performed using the implementation in the [MASS package](https://cran.r-project.org/web/packages/MASS/index.html).
+
+Here, I will explore the functionality of `codondiffR` with a walkthrough of the various steps involved in a typical analysis.
+
+
+## Installation
+
+To install and load codondiffR, run the following commands in R:
+```{r installation, results = "hide", warning = FALSE, message = FALSE}
+# install.packages("devtools")
+devtools::install_github("adamd3/codondiffR")
+library(codondiffR)
+```
+
+## Reading in data
+
+To read in one or more sequences from a fasta-format file, we use the readSeq() function from the `Biostrings` package, as shown below. The DNAStringSet object can then be used to generate a codonFreq object:
+
+```{r read_data}
+virusSet <- readSeq(file = "../inst/extdata/example_viruses.fna")
+
+class(virusSet)
+
+## Create a codonFreq object from the DNAStringSet.
+virusCF <- codonFreq(virusSet)
+
+class(virusCF)
+```
+
+The relative codon frequencies, along with the names and lengths (in codons) of each sequence, are stored in the codonFreq object, which is the main container for all subsequent analytical procedures. We can access the identifiers, lengths of sequences, and codon frequencies as follows:
+
+```{r view_data}
+nseq(virusCF)
+
+head(seqID(virusCF))
+
+head(seqlen(virusCF))
+
+head(getFreqs(virusCF)[,1:6])
+```
+
+## Subset a codonFreq object
+Subsetting functionality for a codonFreq object essentially works the same as  `Base::Extract` - you pass the numeric indices of the subset in the format: x[i, j]; where x is the codonFreq object, 'i' are the indices of rows (sequences) in the object to be included in the subset, and 'j' are the columns (codons) to be included.
+
+```{r subset}
+## Subset to the first 10 sequences, including all 64 codons:
+virusCF_sub_1 <- virusCF[1:10,1:64]
+
+nseq(virusCF_sub_1)
+
+## Subset to specific codons and the first 10 sequences:
+codIdx <- which(colnames(getFreqs(virusCF)) %in% c("ATC", "AAT", "GCC"))
+virusCF_sub_2 <- virusCF[1:10,codIdx]
+```
+
+## Visualise codon frequency and GC3 content
+To plot the relative codon frequencies, call the plot() function on the `codonFreq` object as shown below. Various attributes of the output figure can be specified using the parameters `height`, `width`, `dpi`, and `fname`. See help for `plot.codonFreq()` for more information. If a `groups` vector is supplied, then codon frequencies will be plotted by group. Note that all plotting functions in the package will return a `ggplot` object, which can be used to modify or combine figures.
+
+```{r codon_plots, fig.height = 5, fig.width = 15}
+## Ungrouped
+codonPlot(virusCF)
+
+## Grouped
+groups <- c(
+    rep("Non-mammalian virus", 4),
+    rep("Mammalian virus", 10), rep("Non-mammalian virus", 2)
+)
+
+codonPlot(virusCF, groups = groups)
+
+```
+For these and all other plots, it is possible to save the plot to file when calling the function, by setting `save = TRUE` when calling `codonPlot` (or any other plot-producing function), and the height, width, file name and dpi of the saved figure can be specified. See the help pages for each function.
+
+It is also possible to plot the GC3 content (i.e. proportion of codons with a G or a C residue at the third position) across the sequences. A `groups` vector is required here; and it must be the same length as the number of sequences in the `codonFreq` object.
+```{r gc_plots, fig.width = 12, fig.height = 5}
+groups <- c(
+    rep("Plant virus", 2), rep("Insect virus", 2),
+    rep("Mammal-specific virus", 6), rep("Mammalian and Insect virus", 4), rep("Insect-specific virus", 2)
+)
+
+gcPlot(virusCF, groups = groups)
+```
+
+## Normalisation and codon bias calculation
+Normalisation of codon frequencies transforms the raw frequencies of individual codons into the relative proportions for each amino acid. For example, if half of all alanine-encoding codons are GCC and the other half are GCG, then the normalised abundances of these two codons will both be 0.5, and the abundances of the other two alanine-encoding codons (GCT and GCA) will be 0. When an amino acid is not found in a given sequence, then the proportions of each of the corresponding codons will be `NA`.
+```{r normalisation}
+virusCF_norm <- normalise(virusCF)
+
+head(getFreqs(virusCF_norm)[,1:6])
+```
+
+## Codon bias plots
+Codon bias can be plotted using normalised frequencies per amino acid:
+```{r bias_plots, fig.width = 8, fig.height = 4}
+groups <- c(
+    rep("Non-mammalian virus", 4),
+    rep("Mammalian virus", 10), rep("Non-mammalian virus", 2)
+)
+
+biasPlot(
+    virusCF_norm, groups = groups, aa = "L",
+    label = "Leucine", colours = c(1,2), ylim = c(0,0.5)
+)
+
+
+```
+
+## Comparison with codon usage in other taxa
+Mean codon usage frequency divergence (MCUFD) between the sequences in the codonFreq object and those in the Codon Usage Table Database (CUTD) (PMID: 23308027) can be calculated using the MCUFD function. Specific codons can be excluded from the comparison by passing a vector to `exclude`, and a minimum number of codons required in both the `codonFreq` sequences and the CUTD database entries (using the `minlen` parameter; default = 600 codons).
+
+The results can then be plotted using the `MCUFD_plot` function, and the `type` argument accepts either `bar` (bar plots) or `line` (line plots). Moreover, the phylogenetic rank of interest can be specified using the `rank` parameter, which accepts "Phylum" (default), "Domain", or "Kingdom". The five most common overall levels of this rank will be plotted per sequence.
+
+Enrichment testing allows an assessment of the relative over- or under-representation of specific taxonomic ranks in the top `n` hits. Enrichment plot type is determined by the `ptype` parameter, which accepts either "heatmap" (default) or "dotplot". An optional p-value threshold, based on the results of Fisher's exact test, can also be applied using `pthresh`. The results of the enrichment testing can also be saved in tab-delimited format to a file, via `outtab`.
+```{r mcufd, fig.height = 10, fig.width = 10}
+exclCod <- c("TAA", "TAG", "TGA")
+MCUFD_virus <- MCUFD(virusCF_norm, exclude = exclCod, minlen = 600)
+
+class(MCUFD_virus)
+
+## Range of MCUFD values for the first sequence in the `codonFreq` object:
+range(MCUFD_virus[[1]]$MCUFD)
+
+## Taxonomic ranks of the 100 most similar database entries:
+table(MCUFD_virus[[1]]$Kingdom[1:100], useNA = "always")
+
+MCUFD_plot(
+    MCUFD_virus, type = "bar", n = 100, rank = "Phylum"
+)
+
+MCUFD_enrich(
+    MCUFD_virus, n = 100, rank = "Phylum", ptype = "heatmap",
+    pthresh = 0.05
+)
+
+```
+Note that the MCUFD enrichment values can be saved to file by using the `outtab` parameter - see the help page for the `MCUFD_enrich` function.
+
+
+## Principal component analysis (PCA)
+PCA of entries in the Codon Usage Table Database (CUTD) (PMID: 23308027) can be calculated using the `PCA()` function. A subset of specific taxonomic groups can be included using `includeTax`. The `predict_PCA()` function will apply the principal components defined with `PCA()` to the sequences in the `codonFreq` object, and produce a plot of the first two components (PC1 and PC2).
+
+```{r PCA, fig.height = 7, fig.width = 8}
+includeTax <- c(
+    "Arthropoda", "Streptophyta",  "Chordata"
+)
+exclCod <- c("TAA", "TAG", "TGA")
+
+PCA_dat <- PCA(
+    exclude = exclCod, rank = "Phylum",
+    corCut = 1, minlen = 600, includeTax = includeTax
+)
+
+class(PCA_dat)
+
+identifiers <- c(
+    rep("Non-mammalian virus", 4),
+    rep("Mammalian virus", 10), rep("Non-mammalian virus", 2)
+)
+predict_PCA(
+    virusCF_norm, PCA_dat, rank = "Phylum",
+    minlen = 600, identifier = identifiers, includeTax = includeTax
+)
+
+```
+
+## Session info
+```{r session_info}
+sessionInfo()
+```
