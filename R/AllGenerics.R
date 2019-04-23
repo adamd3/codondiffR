@@ -147,7 +147,7 @@ setGeneric(
         cFobj, pcaObj, rank = "Phylum",
         minlen = 600, fname = NA_character_, units = "in",
         width = 10, height = 7, dpi = 600, norm = FALSE, save = FALSE,
-        identifier = NULL, includeTax = NULL
+        identifier = NULL, includeTax = NULL, colours = NULL
     ) standardGeneric("predict_PCA")
 )
 

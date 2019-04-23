@@ -149,7 +149,7 @@ setMethod("show", "codonFreq", function(object) {
 #'    option is "alphabetical". A vector of (64) codons can also be passed,
 #'    which will be used for ordering, exactly as in the vector.
 #' @param colour Integer, between 1 and 9, which specifies the colour to be used
-#'    from the `Set1` palette in the RColorBrewer package. Only applies to
+#'    from the `Set1` palette in the `RColorBrewer` package. Only applies to
 #'    non-grouped plots. Default = 1 (red).
 #' @param suppress_x_txt Logical, suppress x axis labels? Default = FALSE.
 #' @param suppress_y_title Logical, suppress y axis title? Default = FALSE.

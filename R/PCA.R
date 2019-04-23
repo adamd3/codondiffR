@@ -120,6 +120,9 @@ setMethod("PCA", signature = character(),
 #'    = 6.
 #' @param includeTax Character, optional vector of taxa (at the specified rank)
 #'    to be included in the PCA. If not supplied, all taxa will be used.
+#' @param colours Integer vector, containing values between 1 and 9, which
+#'    specifies the colours to be used from the `Set1` palette in the
+#'    `RColorBrewer` package.
 #'
 #' @return A \code{ggplot} object.
 #'
@@ -136,8 +139,8 @@ setMethod("PCA", signature = character(),
 setMethod("predict_PCA",
     signature(cFobj = "codonFreq"),
     function(
-        cFobj, pcaObj, rank, minlen,
-        fname, units, width, height, dpi, norm, save, identifier
+        cFobj, pcaObj, rank, minlen, fname, units, width,
+        height, dpi, norm, save, identifier, colours
     ) {
         if (isTRUE(norm)) cFobj <- normalise(cFobj)
         if (minlen > 0) {
@@ -183,25 +186,20 @@ setMethod("predict_PCA",
         brewer_pallette2 <- brewer_pallette[c(1:4,7:9)] ##exclude yellow
         brewer_greys <- brewer.pal(9, "Greys")[3:8]
         ngp <- length(includeTax)
+        if (!is.null(colours)) {
+            colvec <- c(colours)
+        } else {
+            colvec <- c(
+                brewer_pallette2[1:ngp],
+                brewer_greys[1:length(unique(identifier))+1]
+            )
+        }
         p1 <- ggbiplot(
                 pcaObj, groups = gbnorm[,1], ellipse = TRUE, circle = TRUE,
                 var.axes = FALSE, alpha = 0
                 ) +
-                scale_colour_manual(
-                    "Group",
-                    values = c(
-                        brewer_pallette2[1:ngp],
-                        brewer_greys[1:length(unique(identifier))+1]
-                    ),
-                    guide=FALSE
-                ) +
-                scale_fill_manual(
-                    "Group",
-                    values = c(
-                        brewer_pallette2[1:ngp],
-                        brewer_greys[1:length(unique(identifier))+1]
-                    )
-                ) +
+                scale_colour_manual("Group", values = colvec, guide = FALSE) +
+                scale_fill_manual("Group", values = colvec) +
                 scale_shape_manual(values = c(rep(16, ngp), 17)) +
                 theme_bw() +
                 theme(
