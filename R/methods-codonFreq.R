@@ -11,6 +11,10 @@
 #' @import scales
 #' @import ggbiplot
 #' @import Biostrings
+#' @importFrom stats as.formula complete.cases cor fisher.test median
+#'         na.omit p.adjust prcomp predict var
+#' @importFrom grDevices nclass.FD
+#' @importFrom utils write.table
 NULL
 
 
