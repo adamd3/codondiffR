@@ -16,7 +16,7 @@ setClass(
         ncod = "numeric"
     ),
     prototype = list(
-        name = NA_character_,
+        seqID = NA_character_,
         freq = matrix(nrow = 0, ncol = 0),
         ncod = NA_real_
     ),

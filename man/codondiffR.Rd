@@ -3,7 +3,6 @@
 \docType{package}
 \name{codondiffR}
 \alias{codondiffR}
-\alias{codondiffR-package}
 \title{codondiffR: inter-taxon comparison of codon usage}
 \description{
 An R package for the comparative analysis of codon usage in a set of

@@ -1,6 +1,6 @@
 Package: codondiffR
 Title: Codon usage comparisons across taxa
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: person("Adam", "Dinan", email = "adam1989ie@gmail.com", role = c("aut", "cre"))
 Description: Comparison of codon usage in user-supplied sequences with those of reference taxa.
 Depends: R (>= 3.5.1)
@@ -22,7 +22,7 @@ Imports:
     scales,
     ggbiplot,
     factoextra
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 Collate: 
     'AllClasses.R'
     'AllGenerics.R'

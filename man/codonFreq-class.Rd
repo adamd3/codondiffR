@@ -27,11 +27,23 @@ seqID(object)
 
 seqlen(object)
 
-codonPlot(object, fname = NA_character_, units = "in", width = 10,
-  height = 7, dpi = 600, groups = NULL, ptype = "boxplot",
-  order = "median", colour = 1, suppress_x_txt = FALSE,
-  suppress_y_title = FALSE, label = NULL, highlight = NULL,
-  save = FALSE)
+codonPlot(
+  object,
+  fname = NA_character_,
+  units = "in",
+  width = 10,
+  height = 7,
+  dpi = 600,
+  groups = NULL,
+  ptype = "boxplot",
+  order = "median",
+  colour = 1,
+  suppress_x_txt = FALSE,
+  suppress_y_title = FALSE,
+  label = NULL,
+  highlight = NULL,
+  save = FALSE
+)
 
 normalise(object)
 
