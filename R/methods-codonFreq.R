@@ -8,7 +8,6 @@
 #' @import dplyr
 #' @import stringr
 #' @import scales
-#' @import devtools
 #' @import ggbiplot
 #' @importFrom Biostrings readDNAStringSet trinucleotideFrequency width
 #' @importFrom stats as.formula complete.cases cor fisher.test median

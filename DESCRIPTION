@@ -21,9 +21,10 @@ Imports:
     reshape2,
     scales,
     ggbiplot,
-    factoextra
+    factoextra,
+    devtools
 RoxygenNote: 7.1.0
-Collate: 
+Collate:
     'AllClasses.R'
     'AllGenerics.R'
     'methods-codonFreq.R'
@@ -31,7 +32,7 @@ Collate:
     'MCUFD.R'
     'PCA.R'
     'codondiffR.R'
-Suggests: 
+Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
