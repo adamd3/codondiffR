@@ -103,7 +103,7 @@ An object of class \code{lda}, with the following components:
 
 "N": The number of observations used.
 
-"call": The (matched) function call to MASS:lda.
+"call": The (matched) function call to lda().
 
 A named list with the following components:
 
@@ -125,7 +125,8 @@ Perform random sampling using different subsets of the reference database
    to assess the impact on model accuracy.
 }
 \examples{
-    LDA_tmp <- MASS::lda(
+    exclCod <- c("ATT", "TGT")
+    LDA_tmp <- lda(
         exclude = exclCod, rank = "Phylum", trans = FALSE,
         propTrain = 1, corCut = 0.95, minlen = 600
     )

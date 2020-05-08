@@ -36,7 +36,7 @@
 \arguments{
 \item{cFobj}{An object of class \code{codonFreq}.}
 
-\item{ldaObj}{Object of class \code{lda} - produced using the MASS::lda() function.}
+\item{ldaObj}{Object of class \code{lda} - produced using the lda() function.}
 
 \item{rank}{Character, taxonomic rank to be used for categorisation of the
 CUFD hit sequences. Options are "Domain", "Kingdom", and "Phylum".
@@ -90,7 +90,7 @@ disciminants and predictions.
 Plot the distribution of MCUFD values per taxon
 }
 \examples{
-   predLDA <- predict_MASS::lda(
+   predLDA <- predict_lda(
        tmp2norm, LDA_tmp2, rank = "Phylum", plot = TRUE,
        minlen = 600, fname = "lda_tmp2", height = 5, width = 7
    )
