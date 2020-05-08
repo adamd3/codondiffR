@@ -30,6 +30,7 @@ NULL
 #'    Data can be optionally scaled using the
 #'    \href{https://goo.gl/qzN63P}{Box-Cox power transformation}.
 #'
+#' @param indat Input data.frame of codon usage values (default = GenBank).
 #' @param exclude A character vector of codons to be excluded from comparisons.
 #' @param minlen Numeric, the minimum length of sequence (in codons) to be
 #'    included in the analysis. Default = 500.
@@ -57,6 +58,7 @@ NULL
 #' @examples
 #'     exclCod <- c("ATT", "TGT")
 #'     LDA_tmp <- LDA(
+#'         indat = gbnorm,
 #'         exclude = exclCod, rank = "Phylum", trans = FALSE,
 #'         propTrain = 1, corCut = 0.95, minlen = 600
 #'     )
@@ -66,8 +68,8 @@ NULL
 #' @rdname LDA
 #'
 #' @export
-setMethod("LDA", signature = character(),
-    function(exclude, minlen, trans, propTrain, rank, corCut) {
+setMethod("LDA", "data.frame",
+    function(exclude, minlen, trans, propTrain, rank, corCut, indat) {
         if (length(exclude) > 0) {
             keepRef <- which(!(colnames(gbnorm) %in% exclude))
             gbnorm <- gbnorm[, keepRef]
