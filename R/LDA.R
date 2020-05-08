@@ -52,10 +52,11 @@ NULL
 #'     within-group standard deviations on the linear discriminant variables.
 #'     Their squares are the canonical F-statistics.
 #' @return "N": The number of observations used.
-#' @return "call": The (matched) function call to MASS:lda.
+#' @return "call": The (matched) function call to lda().
 #'
 #' @examples
-#'     LDA_tmp <- MASS::lda(
+#'     exclCod <- c("ATT", "TGT")
+#'     LDA_tmp <- lda(
 #'         exclude = exclCod, rank = "Phylum", trans = FALSE,
 #'         propTrain = 1, corCut = 0.95, minlen = 600
 #'     )
@@ -109,7 +110,7 @@ setMethod("LDA", "data.frame",
         ntest <- nrow(gbnorm) - ntrain
         train <- sample(1:nrow(gbnorm), ntrain)
         f <- as.formula(substitute(x ~ ., list(x = as.name(rank))))
-        m1 <- MASS::lda(f, gbnorm, na.action = "na.omit", subset = train)
+        m1 <- lda(f, gbnorm, na.action = "na.omit", subset = train)
         m1
 })
 
@@ -208,7 +209,7 @@ setMethod("bootstrap_LDA",
             assign("gbnorm", gbnorm, envir = parent.frame(n=2))
             train <- sample(1:nrow(gbnorm), ntrain)
             f <- as.formula(substitute(x ~ ., list(x = as.name(rank))))
-            m1 <- MASS::lda(f, gbnorm, na.action = "na.omit", subset = train)
+            m1 <- lda(f, gbnorm, na.action = "na.omit", subset = train)
             predAll <- predict(m1, gbnorm[-train, ])
             tablin <- table(gbnorm[-train, 1], predAll$class)
             acc <- sum(diag(tablin))/sum(tablin)
@@ -229,7 +230,7 @@ setMethod("bootstrap_LDA",
 #' disciminants and predictions.
 #'
 #' @param cFobj An object of class \code{codonFreq}.
-#' @param ldaObj Object of class \code{lda} - produced using the MASS::lda() function.
+#' @param ldaObj Object of class \code{lda} - produced using the lda() function.
 #' @param rank Character, taxonomic rank to be used for categorisation of the
 #'    CUFD hit sequences. Options are "Domain", "Kingdom", and "Phylum".
 #'    Default = "Phylum".
@@ -253,7 +254,7 @@ setMethod("bootstrap_LDA",
 #' @return A \code{ggplot} object.
 #'
 #' @examples
-#'    predLDA <- predict_MASS::lda(
+#'    predLDA <- predict_lda(
 #'        tmp2norm, LDA_tmp2, rank = "Phylum", plot = TRUE,
 #'        minlen = 600, fname = "lda_tmp2", height = 5, width = 7
 #'    )
