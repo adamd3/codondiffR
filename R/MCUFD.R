@@ -324,7 +324,7 @@ setMethod("MCUFD_enrich",
             floor(min(resMelt$value)), ceiling(max(resMelt$value))
         )
         plt <- switch(ptype,
-            "dotplot" = ggplot(subMelt, aes(x = Taxon, y = value)) +
+            "dotplot" = ggplot(subMelt, aes_string(x = Taxon, y = value)) +
                 geom_point(
                     shape = 21, size = 4, fill = "red", alpha = 0.5,
                     show.legend = FALSE
@@ -339,7 +339,7 @@ setMethod("MCUFD_enrich",
                 xlab("Taxon") +
                 ylab(paste0("Fold enrichment in top ", n, " taxa")),
             "heatmap" = ggplot(
-                resMelt, aes(x = Taxon, y = seqid, fill = value)
+                resMelt, aes_string(x = Taxon, y = seqid, fill = value)
                 ) +
                 geom_tile(colour = "black") +
                 scale_fill_gradient2(

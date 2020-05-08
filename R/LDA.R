@@ -315,7 +315,7 @@ setMethod("predict_LDA",
             brewer_pallette <- c(brewer.pal(nplot, "Set1"), "black")
             p1 <- ggplot(plot_df) +
                 geom_point(
-                    aes(
+                    aes_string(
                         lda.LD1, lda.LD2,
                         colour = Taxon, size = Taxon,
                         shape = Taxon, alpha = Taxon

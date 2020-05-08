@@ -10,5 +10,5 @@ inst/doc
 *.tsv
 *.accession2taxid.gz
 Figures/
-.Rcheck
-.tar.gz
+*.Rcheck
+*.tar.gz

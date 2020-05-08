@@ -220,14 +220,18 @@ setMethod(
             }
             p1 <- switch(ptype,
                 "boxplot" = ggplot(
-                    codon_melt, aes(x = variable, y = value, fill = variable)
+                    codon_melt, aes_string(
+                      x = variable, y = value, fill = variable
+                    )
                     ) +
                     geom_boxplot(
                         outlier.size = 2, lwd = 1#, fatten = 1
                     ) +
                     scale_fill_manual("", values = cols),
                 "jitter" = ggplot(
-                    codon_melt, aes(x = variable, y = value, colour = variable)
+                    codon_melt, aes_string(
+                      x = variable, y = value, colour = variable
+                    )
                     ) +
                     geom_jitter(position = position_jitter(0.3), size = 1) +
                     scale_colour_manual("", values = cols) +
@@ -298,7 +302,9 @@ setMethod(
             }
             p1 <- switch(ptype,
                 "boxplot" = ggplot(
-                    codon_melt, aes(x = variable, y = value, fill = groups)
+                    codon_melt, aes_string(
+                      x = variable, y = value, fill = groups
+                    )
                     ) +
                     geom_boxplot(
                         outlier.size = 0.5, lwd = 0.5, fatten = 1,
@@ -306,7 +312,9 @@ setMethod(
                     ) + scale_fill_manual("", values = cols)
                     ,
                 "jitter" = ggplot(
-                    codon_melt, aes(x = variable, y = value, colour = groups)
+                    codon_melt, aes_string(
+                      x = variable, y = value, colour = groups
+                    )
                     ) +
                     geom_jitter(position = position_jitter(0.3), size = 1) +
                     scale_colour_manual("", values = cols) +
@@ -374,9 +382,10 @@ setMethod(
 #' @param norm Logical, should the data be normalised? If TRUE, a normalisation
 #'    step will be performed. Default = FALSE.
 #' @param label Character, optional label to add to the plotting area.
-#' @param colours Optional vector of same length as `groups`, containing integers
-#'    between 1 and 9, which specifies the colours to be used from the `Set1`
-#'    palette in the RColorBrewer package. By default, the Set1 order is used.
+#' @param colours Optional vector of same length as `groups`, containing
+#'    integers between 1 and 9, which specifies the colours to be used from the
+#'    `Set1` palette in the RColorBrewer package. By default, the Set1 order is
+#'    used.
 #' @param suppress_y_txt Logical, suppress y axis labels? Default = FALSE.
 #' @param suppress_y_title Logical, suppress y axis title? Default = FALSE.
 #' @param legend Logical, plot a legend? Default = TRUE.
@@ -445,7 +454,7 @@ setMethod(
         }
         lgd <- ifelse(isTRUE(legend), "right", "none")
         p1 <- ggplot(
-                codon_melt, aes(x = variable, y = value, fill = groups)
+                codon_melt, aes_string(x = variable, y = value, fill = groups)
             ) +
             geom_boxplot(
                 outlier.size = 2, lwd = 1, #fatten = 1,
@@ -510,9 +519,10 @@ setMethod(
 #' @param norm Logical, should the data be normalised? If TRUE, a normalisation
 #'    step will be performed. Default = FALSE.
 #' @param label Character, optional label to add to the plotting area.
-#' @param colours Optional vector of same length as `groups`, containing integers
-#'    between 1 and 9, which specifies the colours to be used from the `Set1`
-#'    palette in the RColorBrewer package. By default, the Set1 order is used.
+#' @param colours Optional vector of same length as `groups`, containing
+#'    integers between 1 and 9, which specifies the colours to be used from the
+#'    `Set1` palette in the RColorBrewer package. By default, the Set1 order is
+#'    used.
 #' @param suppress_y_txt Logical, suppress y axis labels? Default = FALSE.
 #' @param suppress_y_title Logical, suppress y axis title? Default = FALSE.
 #' @param legend Logical, plot a legend? Default = TRUE.
@@ -597,7 +607,7 @@ setMethod(
             dplyr::summarize(mean = mean(GC3_proportion, na.rm=TRUE))
         group_means <- group_means$mean
         p1 <- ggplot(
-            codon_melt, aes(x = value, colour = groups)
+            codon_melt, aes_string(x = value, colour = groups)
             ) +
             geom_density(size = 1) +
             theme_bw() +
