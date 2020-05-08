@@ -110,7 +110,7 @@ setMethod("LDA", "data.frame",
         ntest <- nrow(gbnorm) - ntrain
         train <- sample(1:nrow(gbnorm), ntrain)
         f <- as.formula(substitute(x ~ ., list(x = as.name(rank))))
-        m1 <- lda(f, gbnorm, na.action = "na.omit", subset = train)
+        m1 <- MASS::lda(f, gbnorm, na.action = "na.omit", subset = train)
         m1
 })
 
@@ -209,7 +209,7 @@ setMethod("bootstrap_LDA",
             assign("gbnorm", gbnorm, envir = parent.frame(n=2))
             train <- sample(1:nrow(gbnorm), ntrain)
             f <- as.formula(substitute(x ~ ., list(x = as.name(rank))))
-            m1 <- lda(f, gbnorm, na.action = "na.omit", subset = train)
+            m1 <- MASS::lda(f, gbnorm, na.action = "na.omit", subset = train)
             predAll <- predict(m1, gbnorm[-train, ])
             tablin <- table(gbnorm[-train, 1], predAll$class)
             acc <- sum(diag(tablin))/sum(tablin)
