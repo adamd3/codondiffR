@@ -2,7 +2,6 @@
 #' @include AllGenerics.R
 #' @import ggplot2
 #' @import reshape2
-#' @import MASS
 #' @import caret
 #' @import e1071
 #' @import RColorBrewer
@@ -16,6 +15,7 @@
 #'         na.omit p.adjust prcomp predict var
 #' @importFrom grDevices nclass.FD
 #' @importFrom utils write.table
+#' @importFrom MASS lda
 NULL
 
 
