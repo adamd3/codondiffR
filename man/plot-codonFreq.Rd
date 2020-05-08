@@ -110,9 +110,10 @@ highlighted.}
 \item{norm}{Logical, should the data be normalised? If TRUE, a normalisation
 step will be performed. Default = FALSE.}
 
-\item{colours}{Optional vector of same length as `groups`, containing integers
-between 1 and 9, which specifies the colours to be used from the `Set1`
-palette in the RColorBrewer package. By default, the Set1 order is used.}
+\item{colours}{Optional vector of same length as `groups`, containing
+integers between 1 and 9, which specifies the colours to be used from the
+`Set1` palette in the RColorBrewer package. By default, the Set1 order is
+used.}
 
 \item{suppress_y_txt}{Logical, suppress y axis labels? Default = FALSE.}
 

@@ -42,7 +42,7 @@ setMethod("PCA", signature = character(),
             gbnorm <- gbnorm[, keepRef]
         }
         if (minlen > 0) gbnorm <- subset(gbnorm, X..Codons >= minlen)
-        rmcols <- setdiff(colnames(gbnorm)[1:6], rank)
+        rmcols <- dplyr::setdiff(colnames(gbnorm)[1:6], rank)
         gbnorm <- gbnorm[, !(names(gbnorm) %in% rmcols)]
         ## remove NAs from taxon column
         completeVec <- complete.cases(gbnorm[, 1])
@@ -152,7 +152,7 @@ setMethod("predict_PCA",
         codonsInc <- rownames(factoextra::get_pca_var(pcaObj)$coord)
         keepcF <- which(colnames(cFobj@freq) %in% codonsInc)
         cFobj <- cFobj[, keepcF]
-        rmcols <- setdiff(colnames(gbnorm)[1:6], rank)
+        rmcols <- dplyr::setdiff(colnames(gbnorm)[1:6], rank)
         gbnorm <- gbnorm[,!(colnames(gbnorm) %in% rmcols)]
         gbnorm <- cbind(
             gbnorm[,1], gbnorm[colnames(gbnorm) %in% codonsInc]

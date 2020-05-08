@@ -10,7 +10,8 @@
 #' @import stringr
 #' @import scales
 #' @import ggbiplot
-#' @import Biostrings
+#' @importFrom BiocGenerics width
+#' @importFrom Biostrings readDNAStringSet trinucleotideFrequency
 #' @importFrom stats as.formula complete.cases cor fisher.test median
 #'         na.omit p.adjust prcomp predict var
 #' @importFrom grDevices nclass.FD
@@ -51,7 +52,7 @@ setMethod(.validity, "codonFreq", function(object) {
 #'
 #' @export
 readSeq <- function(file = character(), ...) {
-    SSobj <- readDNAStringSet(file, format="fasta")
+    SSobj <- Biostrings::readDNAStringSet(file, format="fasta")
     SSobj
 }
 
@@ -69,13 +70,13 @@ readSeq <- function(file = character(), ...) {
 #'
 #' @return a \code{codonFreq} object.
 setMethod("codonFreq", "DNAStringSet", function(object) {
-    if (!all(width(object) %% 3 == 0)) {
+    if (!all(BiocGenerics::width(object) %% 3 == 0)) {
         stop(paste0(
             "All sequences lengths must be a multiple of 3.\n",
             "Partial codons and non-coding regions are not allowed."
         ))
     }
-    emptyidx <- which(width(object) == 0)
+    emptyidx <- which(BiocGenerics::width(object) == 0)
     if (length(emptyidx) > 0) {
       warning(
           paste0(
@@ -94,7 +95,7 @@ setMethod("codonFreq", "DNAStringSet", function(object) {
         "codonFreq",
         seqID = names(object),
         freq = freqmat,
-        ncod = width(object)/3
+        ncod = BiocGenerics::width(object)/3
     )
 })
 
