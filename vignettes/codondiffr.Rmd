@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 ## Introducing codondiffR
 
-`codondiffR` is an R package that I wrote for the calculation, visualisation, and comparative analysis of codon usage metrics in user-supplied protein-coding nucleotide sequences.
+`codondiffR` is an R package for the calculation, visualisation, and comparative analysis of codon usage metrics in user-supplied protein-coding nucleotide sequences.
 
 Pre-defined codon usage statistics for reference taxa come from the RefSeq subset of the latest release of the Codon Usage Table Database made by [Athey et al. (2017)](https://www.ncbi.nlm.nih.gov/pubmed/28865429). Mean codon  usage frequency difference (MCUFD) metric is calculated as described in [Stedman et al. (2013)](https://www.ncbi.nlm.nih.gov/pubmed/23308027), and linear discriminant analysis is performed using the implementation in the [MASS package](https://cran.r-project.org/web/packages/MASS/index.html).
 
