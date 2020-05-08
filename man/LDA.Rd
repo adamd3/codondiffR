@@ -125,14 +125,14 @@ Perform random sampling using different subsets of the reference database
    to assess the impact on model accuracy.
 }
 \examples{
-    LDA_tmp <- LDA(
+    LDA_tmp <- MASS::lda(
         exclude = exclCod, rank = "Phylum", trans = FALSE,
         propTrain = 1, corCut = 0.95, minlen = 600
     )
     names(LDA_tmp)
 
    exclCod <- c("ATT", "TGT")
-   boot <- bootstrap_LDA(
+   boot <- bootstrap_lda(
        rep = 100, propTrain = 0.8, trans = FALSE, rank = "Phylum",
        exclude = exclCod, minlen = 600, corCut = 0.95
    )

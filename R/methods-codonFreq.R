@@ -221,7 +221,7 @@ setMethod(
             }
             p1 <- switch(ptype,
                 "boxplot" = ggplot(
-                    codon_melt, aes_string(
+                    codon_melt, aes(
                       x = variable, y = value, fill = variable
                     )
                     ) +
@@ -230,7 +230,7 @@ setMethod(
                     ) +
                     scale_fill_manual("", values = cols),
                 "jitter" = ggplot(
-                    codon_melt, aes_string(
+                    codon_melt, aes(
                       x = variable, y = value, colour = variable
                     )
                     ) +
@@ -303,7 +303,7 @@ setMethod(
             }
             p1 <- switch(ptype,
                 "boxplot" = ggplot(
-                    codon_melt, aes_string(
+                    codon_melt, aes(
                       x = variable, y = value, fill = groups
                     )
                     ) +
@@ -313,7 +313,7 @@ setMethod(
                     ) + scale_fill_manual("", values = cols)
                     ,
                 "jitter" = ggplot(
-                    codon_melt, aes_string(
+                    codon_melt, aes(
                       x = variable, y = value, colour = groups
                     )
                     ) +
@@ -455,7 +455,7 @@ setMethod(
         }
         lgd <- ifelse(isTRUE(legend), "right", "none")
         p1 <- ggplot(
-                codon_melt, aes_string(x = variable, y = value, fill = groups)
+                codon_melt, aes(x = variable, y = value, fill = groups)
             ) +
             geom_boxplot(
                 outlier.size = 2, lwd = 1, #fatten = 1,
@@ -605,10 +605,10 @@ setMethod(
         }
         group_means <- cdfGC %>%
             group_by(groups) %>%
-            dplyr::summarize(mean = mean(GC3_proportion, na.rm=TRUE))
+            dplyr::summarise(mean = mean(GC3_proportion, na.rm=TRUE))
         group_means <- group_means$mean
         p1 <- ggplot(
-            codon_melt, aes_string(x = value, colour = groups)
+            codon_melt, aes(x = value, colour = groups)
             ) +
             geom_density(size = 1) +
             theme_bw() +
