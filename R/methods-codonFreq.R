@@ -9,7 +9,6 @@
 #' @import stringr
 #' @import scales
 #' @import ggbiplot
-#' @importFrom BiocGenerics width
 #' @importFrom Biostrings readDNAStringSet trinucleotideFrequency
 #' @importFrom stats as.formula complete.cases cor fisher.test median
 #'         na.omit p.adjust prcomp predict var
