@@ -126,7 +126,7 @@ Perform random sampling using different subsets of the reference database
 }
 \examples{
     exclCod <- c("ATT", "TGT")
-    LDA_tmp <- lda(
+    LDA_tmp <- LDA(
         exclude = exclCod, rank = "Phylum", trans = FALSE,
         propTrain = 1, corCut = 0.95, minlen = 600
     )
