@@ -69,13 +69,13 @@ readSeq <- function(file = character(), ...) {
 #'
 #' @return a \code{codonFreq} object.
 setMethod("codonFreq", "DNAStringSet", function(object) {
-    if (!all(width(object) %% 3 == 0)) {
+    if (!all(Biostrings::width(object) %% 3 == 0)) {
         stop(paste0(
             "All sequences lengths must be a multiple of 3.\n",
             "Partial codons and non-coding regions are not allowed."
         ))
     }
-    emptyidx <- which(width(object) == 0)
+    emptyidx <- which(Biostrings::width(object) == 0)
     if (length(emptyidx) > 0) {
       warning(
           paste0(
@@ -94,7 +94,7 @@ setMethod("codonFreq", "DNAStringSet", function(object) {
         "codonFreq",
         seqID = names(object),
         freq = freqmat,
-        ncod = width(object)/3
+        ncod = Biostrings::width(object)/3
     )
 })
 
