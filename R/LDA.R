@@ -67,33 +67,33 @@ NULL
 #'
 #' @export
 setMethod("LDA", "data.frame",
-    function(exclude, minlen, trans, propTrain, rank, corCut) {
+    function(gbnorm, exclude, minlen, trans, propTrain, rank, corCut) {
         if (length(exclude) > 0) {
-            keepRef <- which(!(colnames(codondiffR::gbnorm) %in% exclude))
-            codondiffR::gbnorm <- codondiffR::gbnorm[, keepRef]
+            keepRef <- which(!(colnames(gbnorm) %in% exclude))
+            gbnorm <- gbnorm[, keepRef]
         }
         if (minlen > 0) {
-            codondiffR::gbnorm <- subset(codondiffR::gbnorm, X..Codons >= minlen)
+            gbnorm <- subset(gbnorm, X..Codons >= minlen)
         }
-        if (trans == TRUE) codondiffR::gbnorm <- .boxcox(codondiffR::gbnorm, 1:6)
+        if (trans == TRUE) gbnorm <- .boxcox(gbnorm, 1:6)
         if ((0 > propTrain) | (1 < propTrain)) {
             stop("propTrain must be in the range [0,1]")
         }
-        rmcols <- setdiff(colnames(codondiffR::gbnorm)[1:6], rank)
-        codondiffR::gbnorm <- codondiffR::gbnorm[, !(names(codondiffR::gbnorm) %in% rmcols)]
+        rmcols <- setdiff(colnames(gbnorm)[1:6], rank)
+        gbnorm <- gbnorm[, !(names(gbnorm) %in% rmcols)]
         ## remove NAs from taxon column
-        completeVec <- complete.cases(codondiffR::gbnorm[, 1])
-        codondiffR::gbnorm <- codondiffR::gbnorm[completeVec, ]
+        completeVec <- complete.cases(gbnorm[, 1])
+        gbnorm <- gbnorm[completeVec, ]
         ## remove variables with zero variance
-        colVars <- apply(codondiffR::gbnorm[2:ncol(codondiffR::gbnorm)], 2, function (x) {
+        colVars <- apply(gbnorm[2:ncol(gbnorm)], 2, function (x) {
             var(x, na.rm = TRUE)
         })
         rmvars <- names(colVars[colVars == 0])
         ## drop collinear variables
         if (corCut < 1) {
             cormat <- cor(
-                codondiffR::gbnorm[, 2:ncol(codondiffR::gbnorm)],
-                codondiffR::gbnorm[, 2:ncol(codondiffR::gbnorm)],
+                gbnorm[, 2:ncol(gbnorm)],
+                gbnorm[, 2:ncol(gbnorm)],
                 use = "pairwise.complete.obs"
             )
             rmcor <- findCorrelation(
@@ -104,13 +104,13 @@ setMethod("LDA", "data.frame",
             )
             rmvars <- c(rmvars, rmcor)
         }
-        codondiffR::gbnorm <- codondiffR::gbnorm[, -which(names(codondiffR::gbnorm) %in% rmvars)]
-        codondiffR::gbnorm[,1] <- as.factor(codondiffR::gbnorm[,1])
-        ntrain <- round((nrow(codondiffR::gbnorm) * propTrain), digits = 0)
-        ntest <- nrow(codondiffR::gbnorm) - ntrain
-        train <- sample(1:nrow(codondiffR::gbnorm), ntrain)
+        gbnorm <- gbnorm[, -which(names(gbnorm) %in% rmvars)]
+        gbnorm[,1] <- as.factor(gbnorm[,1])
+        ntrain <- round((nrow(gbnorm) * propTrain), digits = 0)
+        ntest <- nrow(gbnorm) - ntrain
+        train <- sample(1:nrow(gbnorm), ntrain)
         f <- as.formula(substitute(x ~ ., list(x = as.name(rank))))
-        m1 <- MASS::lda(f, codondiffR::gbnorm, na.action = "na.omit", subset = train)
+        m1 <- MASS::lda(f, gbnorm, na.action = "na.omit", subset = train)
         m1
 })
 
@@ -166,29 +166,29 @@ setMethod("bootstrap_LDA",
             accuracy = numeric(rep)
         )
         if (length(exclude) > 0) {
-            keepRef <- which(!(colnames(codondiffR::gbnorm) %in% exclude))
-            codondiffR::gbnorm <- codondiffR::gbnorm[, keepRef]
+            keepRef <- which(!(colnames(gbnorm) %in% exclude))
+            gbnorm <- gbnorm[, keepRef]
         }
-        if (minlen > 0) codondiffR::gbnorm <- subset(codondiffR::gbnorm, X..Codons >= minlen)
-        if (trans == TRUE) codondiffR::gbnorm <- .boxcox(codondiffR::gbnorm, 1:6)
+        if (minlen > 0) gbnorm <- subset(gbnorm, X..Codons >= minlen)
+        if (trans == TRUE) gbnorm <- .boxcox(gbnorm, 1:6)
         if ((0 > propTrain) | (1 < propTrain)) {
             stop("propTrain must be in the range [0,1]")
         }
-        rmcols <- setdiff(colnames(codondiffR::gbnorm)[1:6], rank)
-        codondiffR::gbnorm <- codondiffR::gbnorm[ , !(names(codondiffR::gbnorm) %in% rmcols)]
+        rmcols <- setdiff(colnames(gbnorm)[1:6], rank)
+        gbnorm <- gbnorm[ , !(names(gbnorm) %in% rmcols)]
         ## remove NAs from taxon column
-        completeVec <- complete.cases(codondiffR::gbnorm[, 1])
-        codondiffR::gbnorm <- codondiffR::gbnorm[completeVec, ]
+        completeVec <- complete.cases(gbnorm[, 1])
+        gbnorm <- gbnorm[completeVec, ]
         ## remove variables with zero variance
-        colVars <- apply(codondiffR::gbnorm[2:ncol(codondiffR::gbnorm)], 2, function (x) {
+        colVars <- apply(gbnorm[2:ncol(gbnorm)], 2, function (x) {
             var(x, na.rm = TRUE)
         })
         rmvars <- names(colVars[colVars == 0])
         ## drop collinear variables
         if (corCut < 1) {
             cormat <- cor(
-                codondiffR::gbnorm[, 2:ncol(codondiffR::gbnorm)],
-                codondiffR::gbnorm[, 2:ncol(codondiffR::gbnorm)],
+                gbnorm[, 2:ncol(gbnorm)],
+                gbnorm[, 2:ncol(gbnorm)],
                 use = "pairwise.complete.obs"
             )
             rmcor <- findCorrelation(
@@ -199,19 +199,19 @@ setMethod("bootstrap_LDA",
             )
             rmvars <- c(rmvars, rmcor)
         }
-        codondiffR::gbnorm <- codondiffR::gbnorm[, -which(names(codondiffR::gbnorm) %in% rmvars)]
-        resList$codons <- colnames(codondiffR::gbnorm)[2:ncol(codondiffR::gbnorm)]
-        resList$taxa <- unique(codondiffR::gbnorm[,1])
-        codondiffR::gbnorm[,1] <- as.factor(codondiffR::gbnorm[,1])
-        ntrain <- round((nrow(codondiffR::gbnorm) * propTrain), digits = 0)
-        ntest <- nrow(codondiffR::gbnorm) - ntrain
+        gbnorm <- gbnorm[, -which(names(gbnorm) %in% rmvars)]
+        resList$codons <- colnames(gbnorm)[2:ncol(gbnorm)]
+        resList$taxa <- unique(gbnorm[,1])
+        gbnorm[,1] <- as.factor(gbnorm[,1])
+        ntrain <- round((nrow(gbnorm) * propTrain), digits = 0)
+        ntest <- nrow(gbnorm) - ntrain
         sapply(1:rep, function(k) {
-            assign("codondiffR::gbnorm", codondiffR::gbnorm, envir = parent.frame(n=2))
-            train <- sample(1:nrow(codondiffR::gbnorm), ntrain)
+            assign("gbnorm", gbnorm, envir = parent.frame(n=2))
+            train <- sample(1:nrow(gbnorm), ntrain)
             f <- as.formula(substitute(x ~ ., list(x = as.name(rank))))
-            m1 <- MASS::lda(f, codondiffR::gbnorm, na.action = "na.omit", subset = train)
-            predAll <- predict(m1, codondiffR::gbnorm[-train, ])
-            tablin <- table(codondiffR::gbnorm[-train, 1], predAll$class)
+            m1 <- MASS::lda(f, gbnorm, na.action = "na.omit", subset = train)
+            predAll <- predict(m1, gbnorm[-train, ])
+            tablin <- table(gbnorm[-train, 1], predAll$class)
             acc <- sum(diag(tablin))/sum(tablin)
             resList$accuracy[k] <<- acc
         })
@@ -278,19 +278,19 @@ setMethod("predict_LDA",
         codonsInc <- colnames(ldaObj$means) ## codons included in LDA model
         keepcF <- which(colnames(cFobj@freq) %in% codonsInc)
         cFobj <- cFobj[, keepcF]
-        rmcols <- setdiff(colnames(codondiffR::gbnorm)[1:6], rank)
-        codondiffR::gbnorm <- codondiffR::gbnorm[,!(colnames(codondiffR::gbnorm) %in% rmcols)]
-        codondiffR::gbnorm <- cbind(
-            codondiffR::gbnorm[,1], codondiffR::gbnorm[colnames(codondiffR::gbnorm) %in% codonsInc]
+        rmcols <- setdiff(colnames(gbnorm)[1:6], rank)
+        gbnorm <- gbnorm[,!(colnames(gbnorm) %in% rmcols)]
+        gbnorm <- cbind(
+            gbnorm[,1], gbnorm[colnames(gbnorm) %in% codonsInc]
         )
         cFdat <- cbind(cFobj@seqID, as.data.frame(cFobj@freq))
-        colnames(cFdat)[1] <- colnames(codondiffR::gbnorm)[1] <- "Taxon"
+        colnames(cFdat)[1] <- colnames(gbnorm)[1] <- "Taxon"
         if (is.na(identifier)) {
             cFdat[,1] <-  as.factor(str_sub(cFdat[,1], 1, 20))
         } else {
             cFdat[,1] <- as.factor(identifier)
         }
-        allDat <- rbind(codondiffR::gbnorm, cFdat)
+        allDat <- rbind(gbnorm, cFdat)
         allDat[,1] <- as.factor(allDat[,1])
         ## remove NAs from taxon column
         completeVec <- complete.cases(allDat[, 1])

@@ -41,7 +41,7 @@ predict_LDA(
   identifier = NA_character_
 )
 
-\S4method{LDA}{ANY}(
+\S4method{LDA}{data.frame}(
   exclude = character(length = 0),
   minlen = 600,
   trans = FALSE,
