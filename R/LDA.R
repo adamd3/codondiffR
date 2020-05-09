@@ -67,7 +67,7 @@ NULL
 #'
 #' @export
 setMethod("LDA", "data.frame",
-    function(gbnorm, exclude, minlen, trans, propTrain, rank, corCut) {
+    function(exclude, minlen, trans, propTrain, rank, corCut) {
         if (length(exclude) > 0) {
             keepRef <- which(!(colnames(gbnorm) %in% exclude))
             gbnorm <- gbnorm[, keepRef]
