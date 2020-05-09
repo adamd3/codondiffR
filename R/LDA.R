@@ -66,7 +66,7 @@ NULL
 #' @rdname LDA
 #'
 #' @export
-setMethod("LDA", "data.frame",
+setMethod("LDA", signature = character(),
     function(exclude, minlen, trans, propTrain, rank, corCut) {
         if (length(exclude) > 0) {
             keepRef <- which(!(colnames(gbnorm) %in% exclude))
