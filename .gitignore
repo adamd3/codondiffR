@@ -7,7 +7,6 @@ inst/doc
 *.sql
 *.sqlite
 *.dmp
-*.tsv
 *.accession2taxid.gz
 Figures/
 *.Rcheck

@@ -6,13 +6,11 @@ library(dplyr)
 ## functionality
 prepareDatabase(sqlFile = "nameNode.sql",)
 
-## There are two sets of data available from the Codon Usage Table Database:
-## those for NCBI RefSeq and NCBI Genbank entries, respectively.
-## The latter dataset contains more sequences and is used here.
-## (See: hive.biochemistry.gwu.edu/review/codon)
+## The RefSeq codon usage table comes from the Codon Usage Table Database
+## available at: hive.biochemistry.gwu.edu/review/codon
 
 RefSeqCU <- read.table(
-    "../o569942-refseq_species.tsv",
+    "../inst/extdata/o569942-refseq_species.tsv",
     sep = "\t",
     header = TRUE,
     comment.char = "?",
