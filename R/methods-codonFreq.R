@@ -9,6 +9,7 @@
 #' @import stringr
 #' @import scales
 #' @import ggbiplot
+#' @importFrom factoextra get_pca_var
 #' @importFrom Biostrings readDNAStringSet trinucleotideFrequency width
 #' @importFrom stats as.formula complete.cases cor fisher.test median
 #'         na.omit p.adjust prcomp predict var
