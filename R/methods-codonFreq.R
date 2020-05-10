@@ -43,6 +43,8 @@ setMethod(.validity, "codonFreq", function(object) {
 #'
 #' @param file Character, path to a file containing one or more protein-coding
 #'     DNA sequences in fasta format.
+#' @param example Logical, is the sample data required? Default = TRUE. If
+#'     FALSE, system.file() is used to load example data in extdata.
 #' @param ... Other arguments passed to readDNAStringSet.
 #'
 #' @return Returns a \code{DNAStringSet} object.
@@ -51,8 +53,15 @@ setMethod(.validity, "codonFreq", function(object) {
 #'     mySeq <- readSeq(file = "example.fasta")
 #'
 #' @export
-readSeq <- function(file = character(), ...) {
-    SSobj <- Biostrings::readDNAStringSet(file, format="fasta")
+readSeq <- function(file = character(), example = FALSE, ...) {
+    if (isTRUE(example)) {
+      filepath1 <- system.file(
+        "extdata", "example_viruses.fna", package="codondiffR"
+      )
+      SSobj <- Biostrings::readDNAStringSet(filepath1)
+    } else {
+      SSobj <- Biostrings::readDNAStringSet(file)
+    }
     SSobj
 }
 

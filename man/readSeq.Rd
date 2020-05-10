@@ -4,11 +4,14 @@
 \alias{readSeq}
 \title{Read nucleotide sequences from a file.}
 \usage{
-readSeq(file = character(), ...)
+readSeq(file = character(), example = FALSE, ...)
 }
 \arguments{
 \item{file}{Character, path to a file containing one or more protein-coding
 DNA sequences in fasta format.}
+
+\item{example}{Logical, is the sample data required? Default = TRUE. If
+FALSE, system.file() is used to load example data in extdata.}
 
 \item{...}{Other arguments passed to readDNAStringSet.}
 }

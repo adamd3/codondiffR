@@ -29,14 +29,12 @@ NULL
 #'    \code{codonFreq} sequences are in columns.
 #'
 #' @examples
-#'    virusSet <- system.file(
-#'        "extdata", "example_viruses.fna", package="codondiffR"
-#'    )
+#'    virusSet <- readSeq(example = TRUE)
 #'    virusCF <- codonFreq(virusSet)
-#'    MCUFD_tmp2 <- MCUFD(virusCF, exclude = exclCod, norm = TRUE)
-#'    range(MCUFD_tmp2[[1]]$MCUFD)
-#'    table(MCUFD_tmp2[[1]]$Kingdom, useNA = "always")
-#'    MCUFD_tmp2[[1]]$Species[1:10]
+#'    MCUFD_tmp <- MCUFD(virusCF, exclude = exclCod, norm = TRUE)
+#'    range(MCUFD_tmp[[1]]$MCUFD)
+#'    table(MCUFD_tmp[[1]]$Kingdom, useNA = "always")
+#'    MCUFD_tmp[[1]]$Species[1:10]
 #'
 #' @name MCUFD
 #' @rdname MCUFD
@@ -103,9 +101,12 @@ setMethod("MCUFD",
 #' @return A \code{ggplot} object.
 #'
 #' @examples
+#'    virusSet <- readSeq(example = TRUE)
+#'    virusCF <- codonFreq(virusSet)
+#'    MCUFD_tmp <- MCUFD(virusCF, exclude = exclCod, norm = TRUE)
 #'    MCUFD_plot(
-#'        cFres, type = "bar", save = TRUE, fname = "MCUFD_bar_kingdom", n = 100,
-#'        rank = "Kingdom"
+#'        cFres = MCUFD_tmp, type = "bar", save = TRUE,
+#'        fname = "MCUFD_bar_kingdom", n = 100, rank = "Kingdom"
 #'    )
 #'
 #' @rdname plots

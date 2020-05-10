@@ -96,9 +96,12 @@ Plot the distribution of MCUFD values per taxon
    )
    head(sort(table(predLDA$class), decreasing = TRUE))
 
+   virusSet <- readSeq(example = TRUE)
+   virusCF <- codonFreq(virusSet)
+   MCUFD_tmp <- MCUFD(virusCF, exclude = exclCod, norm = TRUE)
    MCUFD_plot(
-       cFres, type = "bar", save = TRUE, fname = "MCUFD_bar_kingdom", n = 100,
-       rank = "Kingdom"
+       cFres = MCUFD_tmp, type = "bar", save = TRUE,
+       fname = "MCUFD_bar_kingdom", n = 100, rank = "Kingdom"
    )
 
 }
