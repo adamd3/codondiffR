@@ -103,7 +103,6 @@ setMethod("LDA", signature = character(),
                 verbose = FALSE,
                 names = TRUE
             )
-            rmvars <- c(rmvars, rmcor)
             gbnorm <- gbnorm[, -which(names(gbnorm) %in% rmvars)]
         }
         gbnorm[,1] <- as.factor(gbnorm[,1])

@@ -66,10 +66,9 @@ setMethod("PCA", signature = character(),
                 verbose = FALSE,
                 names = TRUE
             )
-            rmvars <- c(rmvars, rmcor)
             gbnorm <- gbnorm[, -which(names(gbnorm) %in% rmvars)]
         }
-        ## remove taxa in includeTax, if supplied
+        ## remove taxa not in includeTax, if supplied
         if (!is.null(includeTax)) {
             if (all(includeTax %in% gbnorm[[eval(rank)]])) {
                 gbnorm <- gbnorm[gbnorm[[eval(rank)]] %in% includeTax ,]
@@ -169,7 +168,7 @@ setMethod("predict_PCA",
                 cFdat[,1] <- as.factor(identifier)
             }
         }
-        ## remove taxa in includeTax, if supplied
+        ## remove taxa not in includeTax, if supplied
         if (!is.null(includeTax)) {
             if (all(includeTax %in% gbnorm$Taxon)) {
                 gbnorm <- gbnorm[gbnorm$Taxon %in% includeTax ,]
