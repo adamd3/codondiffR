@@ -191,15 +191,14 @@ setMethod("bootstrap_LDA",
                 gbnorm[, 2:ncol(gbnorm)],
                 use = "pairwise.complete.obs"
             )
-            rmcor <- findCorrelation(
+            rmvars <- findCorrelation(
                 cormat,
                 cutoff = corCut,
                 verbose = FALSE,
                 names = TRUE
             )
-            rmvars <- c(rmvars, rmcor)
+            gbnorm <- gbnorm[, -which(names(gbnorm) %in% rmvars)]
         }
-        gbnorm <- gbnorm[, -which(names(gbnorm) %in% rmvars)]
         resList$codons <- colnames(gbnorm)[2:ncol(gbnorm)]
         resList$taxa <- unique(gbnorm[,1])
         gbnorm[,1] <- as.factor(gbnorm[,1])
