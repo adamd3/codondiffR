@@ -89,6 +89,7 @@ setMethod("LDA", signature = character(),
             var(x, na.rm = TRUE)
         })
         rmvars <- names(colVars[colVars == 0])
+        gbnorm <- gbnorm[, -which(names(gbnorm) %in% rmvars)]
         ## drop collinear variables
         if (corCut < 1) {
             cormat <- cor(
