@@ -104,8 +104,8 @@ setMethod("LDA", signature = character(),
                 names = TRUE
             )
             rmvars <- c(rmvars, rmcor)
+            gbnorm <- gbnorm[, -which(names(gbnorm) %in% rmvars)]
         }
-        gbnorm <- gbnorm[, -which(names(gbnorm) %in% rmvars)]
         gbnorm[,1] <- as.factor(gbnorm[,1])
         ntrain <- round((nrow(gbnorm) * propTrain), digits = 0)
         ntest <- nrow(gbnorm) - ntrain

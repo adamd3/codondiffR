@@ -67,8 +67,8 @@ setMethod("PCA", signature = character(),
                 names = TRUE
             )
             rmvars <- c(rmvars, rmcor)
+            gbnorm <- gbnorm[, -which(names(gbnorm) %in% rmvars)]
         }
-        gbnorm <- gbnorm[, -which(names(gbnorm) %in% rmvars)]
         ## remove taxa in includeTax, if supplied
         if (!is.null(includeTax)) {
             if (all(includeTax %in% gbnorm[[eval(rank)]])) {
