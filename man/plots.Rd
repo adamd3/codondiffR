@@ -90,7 +90,7 @@ disciminants and predictions.
 Plot the distribution of MCUFD values per taxon
 }
 \examples{
-   predLDA <- predict_lda(
+   predLDA <- predict_LDA(
        tmp2norm, LDA_tmp2, rank = "Phylum", plot = TRUE,
        minlen = 600, fname = "lda_tmp2", height = 5, width = 7
    )

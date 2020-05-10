@@ -147,7 +147,7 @@ setMethod("LDA", signature = character(),
 #'
 #' @examples
 #'    exclCod <- c("ATT", "TGT")
-#'    boot <- bootstrap_lda(
+#'    boot <- bootstrap_LDA(
 #'        rep = 100, propTrain = 0.8, trans = FALSE, rank = "Phylum",
 #'        exclude = exclCod, minlen = 600, corCut = 0.95
 #'    )
@@ -255,7 +255,7 @@ setMethod("bootstrap_LDA",
 #' @return A \code{ggplot} object.
 #'
 #' @examples
-#'    predLDA <- predict_lda(
+#'    predLDA <- predict_LDA(
 #'        tmp2norm, LDA_tmp2, rank = "Phylum", plot = TRUE,
 #'        minlen = 600, fname = "lda_tmp2", height = 5, width = 7
 #'    )

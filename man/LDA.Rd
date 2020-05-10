@@ -133,7 +133,7 @@ Perform random sampling using different subsets of the reference database
     names(LDA_tmp)
 
    exclCod <- c("ATT", "TGT")
-   boot <- bootstrap_lda(
+   boot <- bootstrap_LDA(
        rep = 100, propTrain = 0.8, trans = FALSE, rank = "Phylum",
        exclude = exclCod, minlen = 600, corCut = 0.95
    )

@@ -32,7 +32,7 @@ Here, I will explore the functionality of `codondiffR` with a walkthrough of the
 To install and load codondiffR, run the following commands in R:
 ```{r installation, results = "hide", warning = FALSE, message = FALSE}
 # install.packages("devtools")
-devtools::install_github("adamd3/codondiffR")
+# devtools::install_github("adamd3/codondiffR")
 library(codondiffR)
 ```
 

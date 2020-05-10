@@ -12,7 +12,6 @@ Imports:
     ggplot2,
     Biostrings,
     methods,
-    taxonomizr,
     caret,
     MASS,
     e1071,
@@ -20,9 +19,7 @@ Imports:
     RColorBrewer,
     reshape2,
     scales,
-    ggbiplot,
-    factoextra,
-    devtools
+    ggbiplot
 RoxygenNote: 7.1.0
 Collate:
     'AllClasses.R'
