@@ -283,8 +283,7 @@ setMethod("MCUFD_plot",
 #'    exclCod <- c("ATT", "TGT")
 #'    MCUFD_tmp <- MCUFD(virusCF, exclude = exclCod, norm = TRUE)
 #'    enrich_tmp <- MCUFD_enrich(
-#'        MCUFD_tmp, n = 100, rank = "Phylum", plot = TRUE, pthresh = 0.01,
-#'        fname = "enrich_tmp2", height = 5, width = 7
+#'        MCUFD_tmp, n = 100, rank = "Phylum", save = FALSE, pthresh = 0.01
 #'    )
 #'
 #' @export
