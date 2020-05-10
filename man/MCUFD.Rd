@@ -65,6 +65,7 @@ Compare codon usage between sequences in a \code{codonFreq} object with those
 \examples{
    virusSet <- readSeq(example = TRUE)
    virusCF <- codonFreq(virusSet)
+   exclCod <- c("ATT", "TGT")
    MCUFD_tmp <- MCUFD(virusCF, exclude = exclCod, norm = TRUE)
    range(MCUFD_tmp[[1]]$MCUFD)
    table(MCUFD_tmp[[1]]$Kingdom, useNA = "always")

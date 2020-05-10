@@ -98,6 +98,7 @@ Plot the distribution of MCUFD values per taxon
 
    virusSet <- readSeq(example = TRUE)
    virusCF <- codonFreq(virusSet)
+   exclCod <- c("ATT", "TGT")
    MCUFD_tmp <- MCUFD(virusCF, exclude = exclCod, norm = TRUE)
    MCUFD_plot(
        cFres = MCUFD_tmp, type = "bar", save = TRUE,

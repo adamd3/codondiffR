@@ -31,6 +31,7 @@ NULL
 #' @examples
 #'    virusSet <- readSeq(example = TRUE)
 #'    virusCF <- codonFreq(virusSet)
+#'    exclCod <- c("ATT", "TGT")
 #'    MCUFD_tmp <- MCUFD(virusCF, exclude = exclCod, norm = TRUE)
 #'    range(MCUFD_tmp[[1]]$MCUFD)
 #'    table(MCUFD_tmp[[1]]$Kingdom, useNA = "always")
@@ -103,6 +104,7 @@ setMethod("MCUFD",
 #' @examples
 #'    virusSet <- readSeq(example = TRUE)
 #'    virusCF <- codonFreq(virusSet)
+#'    exclCod <- c("ATT", "TGT")
 #'    MCUFD_tmp <- MCUFD(virusCF, exclude = exclCod, norm = TRUE)
 #'    MCUFD_plot(
 #'        cFres = MCUFD_tmp, type = "bar", save = TRUE,
@@ -276,6 +278,10 @@ setMethod("MCUFD_plot",
 #' @return A \code{ggplot} object.
 #'
 #' @examples
+#'    virusSet <- readSeq(example = TRUE)
+#'    virusCF <- codonFreq(virusSet)
+#'    exclCod <- c("ATT", "TGT")
+#'    MCUFD_tmp <- MCUFD(virusCF, exclude = exclCod, norm = TRU
 #'    enrich_tmp <- MCUFD_enrich(
 #'        MCUFD_tmp, n = 100, rank = "Phylum", plot = TRUE, pthresh = 0.01,
 #'        fname = "enrich_tmp2", height = 5, width = 7
