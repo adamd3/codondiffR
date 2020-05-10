@@ -60,7 +60,7 @@ setMethod("PCA", signature = character(),
                 gbnorm[, 2:ncol(gbnorm)],
                 use = "pairwise.complete.obs"
             )
-            rmcor <- findCorrelation(
+            rmvars <- findCorrelation(
                 cormat,
                 cutoff = corCut,
                 verbose = FALSE,
