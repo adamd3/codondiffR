@@ -29,7 +29,9 @@ NULL
 #'    \code{codonFreq} sequences are in columns.
 #'
 #' @examples
-#'    virusSet <- readSeq(file = "../inst/extdata/example_viruses.fna")
+#'    virusSet <- system.file(
+#'        "extdata", "example_viruses.fna", package="codondiffR"
+#'    )
 #'    virusCF <- codonFreq(virusSet)
 #'    MCUFD_tmp2 <- MCUFD(virusCF, exclude = exclCod, norm = TRUE)
 #'    range(MCUFD_tmp2[[1]]$MCUFD)
