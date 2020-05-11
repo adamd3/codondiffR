@@ -90,11 +90,16 @@ disciminants and predictions.
 Plot the distribution of MCUFD values per taxon
 }
 \examples{
-   predLDA <- predict_LDA(
-       tmp2norm, LDA_tmp2, rank = "Phylum", plot = TRUE,
-       minlen = 600, fname = "lda_tmp2", height = 5, width = 7
-   )
-   head(sort(table(predLDA$class), decreasing = TRUE))
+    exclCod <- c("ATT", "TGT")
+    LDA_tmp <- LDA(
+        exclude = exclCod, rank = "Phylum", trans = FALSE,
+        propTrain = 1, corCut = 0.95, minlen = 600
+    )
+    predLDA <- predict_LDA(
+        tmp2norm, LDA_tmp, rank = "Phylum", plot = TRUE,
+        minlen = 600, fname = "lda_tmp2", height = 5, width = 7
+    )
+    head(sort(table(predLDA$class), decreasing = TRUE))
 
    virusSet <- readSeq(example = TRUE)
    virusCF <- codonFreq(virusSet)
