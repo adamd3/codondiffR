@@ -28,6 +28,7 @@ NULL
 #' @return An object of class \code{prcomp}.
 #'
 #' @examples
+#'     exclCod <- c("ATT", "TGT")
 #'     PCA_tmp <- PCA(exclude = exclCod, rank = "Phylum", minlen = 600)
 #'     class(PCA_tmp)
 #'
@@ -127,10 +128,12 @@ setMethod("PCA", signature = character(),
 #' @return A \code{ggplot} object.
 #'
 #' @examples
-#'    predPCA <- predict_PCA(
-#'        tmp2norm, PCA_tmp2, rank = "Phylum", save = TRUE,
-#'        minlen = 600, fname = "PCA_tmp2", height = 5, width = 7
-#'    )
+#'     exclCod <- c("ATT", "TGT")
+#'     PCA_tmp <- PCA(exclude = exclCod, rank = "Phylum", minlen = 600)
+#'     predPCA <- predict_PCA(
+#'         tmp2norm, PCA_tmp, rank = "Phylum", save = TRUE,
+#'         minlen = 600, fname = "PCA_tmp2", height = 5, width = 7
+#'     )
 #'
 #' @name predict_PCA
 #' @rdname predict_PCA

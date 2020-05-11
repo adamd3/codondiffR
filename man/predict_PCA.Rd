@@ -87,9 +87,11 @@ object, using linear discriminants from an \code{PCA}) model. Plot
 disciminants and predictions.
 }
 \examples{
-   predPCA <- predict_PCA(
-       tmp2norm, PCA_tmp2, rank = "Phylum", save = TRUE,
-       minlen = 600, fname = "PCA_tmp2", height = 5, width = 7
-   )
+    exclCod <- c("ATT", "TGT")
+    PCA_tmp <- PCA(exclude = exclCod, rank = "Phylum", minlen = 600)
+    predPCA <- predict_PCA(
+        tmp2norm, PCA_tmp, rank = "Phylum", save = TRUE,
+        minlen = 600, fname = "PCA_tmp2", height = 5, width = 7
+    )
 
 }

@@ -49,6 +49,7 @@ Perform PCA on codon usage in a reference
    database and sequences of unknown taxonomic affinity.
 }
 \examples{
+    exclCod <- c("ATT", "TGT")
     PCA_tmp <- PCA(exclude = exclCod, rank = "Phylum", minlen = 600)
     class(PCA_tmp)
 
