@@ -347,7 +347,7 @@ setMethod(
                         margin = margin(0,20,0,0), size=cc1
                     ),
                     axis.text.y = element_text(colour = "black", size=cc1),
-                    legend.position = "right",
+                    legend.position = "top",
                     legend.text = element_text(size = cc1)
                 )
         } else {
