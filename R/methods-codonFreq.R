@@ -194,7 +194,7 @@ setMethod(
             xtxt = element_blank()
         } else {
             xtxt = element_text(
-                colour = "black", size=cc1*1.2,
+                colour = "black", size=cc1*0.8,
                 angle = 90, hjust = 0.1, vjust = 0.5,
                 margin = margin(10,0,0,0)
             )
@@ -277,7 +277,7 @@ setMethod(
                 # print(levels((codon_melt$variable)))
                 p1 <- p1 + theme(
                     axis.text.x = element_text(
-                        colour = fontCols, size=cc1*1.2,
+                        colour = fontCols, size=cc1*0.8,
                         face = fontFace,
                         angle = 90, hjust = 0.1, vjust = 0.5,
                         margin = margin(10,0,0,0)
@@ -474,7 +474,7 @@ setMethod(
                 legend.text = element_text(size = cc1),
                 text = element_text(size=cc1),
                 axis.text.x = element_text(
-                    colour = "black", size=cc1,
+                    colour = "black", size=cc1*0.8,
                     # angle = 90, hjust = 0.1, vjust = 0.5
                     margin = margin(5,0,0,0)
                 ),
@@ -635,7 +635,7 @@ setMethod(
             scale_colour_manual("Group", values = cols) +
             theme(
                 text = element_text(size=cc1),
-                axis.text.x = element_text(colour = "black", size=cc1),
+                axis.text.x = element_text(colour = "black", size=cc1*0.8),
                 axis.title.x = element_text(
                     colour = "black", size=cc1, margin = margin(5,0,0,0)
                 ),
