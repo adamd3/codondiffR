@@ -272,9 +272,9 @@ setMethod(
                 fontFace[highlight_idx] <- "bold"
                 fontCols <- rep("black", nlevels(codon_melt$variable))
                 fontCols[highlight_idx] <- "red"
-                print(highlight_idx)
-                print(fontFace)
-                print(levels((codon_melt$variable)))
+                # print(highlight_idx)
+                # print(fontFace)
+                # print(levels((codon_melt$variable)))
                 p1 <- p1 + theme(
                     axis.text.x = element_text(
                         colour = fontCols, size=cc1*1.2,
@@ -336,11 +336,7 @@ setMethod(
                 # coord_flip() +
                 theme(
                     text = element_text(size=cc1),
-                    axis.text.x = element_text(
-                        colour = "black", size=cc1,
-                        angle = 90, hjust = 0.1, vjust = 0.5,
-                        margin = margin(10,0,0,0)
-                    ),
+                    axis.text.x = xtxt,
                     # axis.title.x = element_text(
                     #     colour = "black", size=cc1,
                     #     hjust = 0.5, #vjust = 0.1
