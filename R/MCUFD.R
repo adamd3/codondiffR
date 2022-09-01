@@ -369,7 +369,7 @@ setMethod("MCUFD_enrich",
                     # panel.grid.major = element_blank(),
                     # panel.grid.minor = element_blank(),
                     axis.text.x = element_text(
-                        angle = 45, hjust = 1, size = cc1*1.5,
+                        angle = 45, hjust = 1, size = cc1,
                         #hjust = -0.5, #vjust = 0.5,
                         margin = margin(2,0,0,0)
                     ),
