@@ -13,4 +13,4 @@ devtools::install_github("adamd3/codondiffR")
 
 ## Introductory vignette
 
-A brief run-through of the package is available [here](https://adamd3.github.io/2019/03/26/introducing-codondiffR.html).
+A brief run-through of the package is available [here](https://adamd3.github.io/posts/codondiffr/codondiffr/).
