@@ -380,7 +380,8 @@ setMethod("MCUFD_enrich",
                         colour = "black", #size=cc1,
                         #hjust = -0.5, #vjust = 0.5,
                         margin = margin(2,0,0,0)
-                    )
+                    ),
+                    legend.position = "top",
                 ) +
                 ylab(rank)
         )
