@@ -374,7 +374,7 @@ setMethod("MCUFD_enrich",
                         margin = margin(2,0,0,0)
                     ),
                     axis.text.y = element_text(
-                        size=cc1, margin = margin(0,2,0,0)
+                        size=cc1*0.8, margin = margin(0,2,0,0)
                     ),
                     axis.title.x = element_text(
                         colour = "black", #size=cc1,
